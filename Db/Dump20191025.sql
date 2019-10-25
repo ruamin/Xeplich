@@ -16,6 +16,214 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `giangvien`
+--
+
+DROP TABLE IF EXISTS `giangvien`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `giangvien` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `note` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `giangvien`
+--
+
+LOCK TABLES `giangvien` WRITE;
+/*!40000 ALTER TABLE `giangvien` DISABLE KEYS */;
+INSERT INTO `giangvien` VALUES (1,'Vi Bảo Ngọc','','2019-08-01 09:59:37'),(2,'Nguyễn Thị Hiền','','2019-08-01 09:59:37'),(3,'Nguyễn Văn Quân','','2019-08-01 10:04:03'),(4,'Trần Doanh Tuấn','','2019-08-01 10:04:17'),(5,'Nguyễn Trung Thành','','2019-08-01 10:05:17'),(6,'Nguyễn Trung Tín','','2019-08-01 10:05:37'),(7,'Hoa Tất Thắng','','2019-08-01 10:05:50'),(8,'Trần Cao Trường','','2019-08-01 10:06:05'),(9,'Nguyễn Mậu Uyên','','2019-08-01 10:06:26'),(11,'Tống Minh Đức','','2019-08-01 10:07:25'),(15,'Phan Văn Việt','','2019-08-01 10:45:27'),(16,'Hà Trí Trung','','2019-08-01 07:22:05'),(17,'Nguyễn Mạnh Hùng','','2019-08-01 07:22:17'),(19,'Nguyễn Hoài Anh','','2019-08-01 07:22:31'),(20,'Đỗ Thị Mai Hường','','2019-08-01 07:22:31'),(21,'Nguyễn Văn Giang','','2019-08-01 07:22:31'),(22,'Nguyễn Quốc Khánh','','2019-08-01 07:22:31'),(23,'Vũ Văn Trường','','2019-08-01 07:22:31'),(24,'Nguyễn Việt Hùng','','2019-08-01 07:22:31'),(25,'Phan Việt Anh','','2019-08-01 07:22:31'),(26,'Trần Hồng Quang','','2019-09-25 07:22:31'),(27,'Hồ Nhật Quang','','2019-10-23 14:18:31'),(28,'Nguyễn Văn Giang','','2019-10-23 14:19:50'),(29,'Trần Cao Trưởng','','2019-10-23 14:21:02'),(30,'Lê Anh','','2019-10-23 14:24:35'),(31,'Trần Văn An','','2019-10-23 14:54:27');
+/*!40000 ALTER TABLE `giangvien` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `knex_migrations`
+--
+
+DROP TABLE IF EXISTS `knex_migrations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `knex_migrations` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `batch` int(11) DEFAULT NULL,
+  `migration_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=103 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `knex_migrations`
+--
+
+LOCK TABLES `knex_migrations` WRITE;
+/*!40000 ALTER TABLE `knex_migrations` DISABLE KEYS */;
+INSERT INTO `knex_migrations` VALUES (2,'20190316131546_create-giangvien-table.js',1,'2019-07-31 11:57:29'),(12,'20190316142051_create-monhoc-table.js',1,'2019-07-31 11:57:29'),(22,'20190316144056_create-lop-table.js',1,'2019-07-31 11:57:30'),(32,'20190318215349_create-phanconggiangday-table.js',1,'2019-07-31 11:57:30'),(42,'20190321213205_create-x-table.js',1,'2019-07-31 11:57:31'),(52,'20190323173346_create-xrandom-table.js',1,'2019-07-31 11:57:32'),(62,'20190324150901_add-column-tong-ngay-day-to-x-table.js',1,'2019-07-31 11:57:32'),(72,'20190324154125_create-xlaitao-table.js',1,'2019-07-31 11:57:33'),(82,'20190417181919_create_phanconggiangday_ky2.js',2,'2019-07-18 15:26:53'),(92,'20190418135127_create_xlaitao2_table.js',2,'2019-07-18 15:26:53'),(102,'20190418140023_create_xrandom2_table.js',2,'2019-07-18 15:26:54');
+/*!40000 ALTER TABLE `knex_migrations` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `knex_migrations_lock`
+--
+
+DROP TABLE IF EXISTS `knex_migrations_lock`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `knex_migrations_lock` (
+  `index` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `is_locked` int(11) DEFAULT NULL,
+  PRIMARY KEY (`index`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `knex_migrations_lock`
+--
+
+LOCK TABLES `knex_migrations_lock` WRITE;
+/*!40000 ALTER TABLE `knex_migrations_lock` DISABLE KEYS */;
+INSERT INTO `knex_migrations_lock` VALUES (2,0);
+/*!40000 ALTER TABLE `knex_migrations_lock` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `lop`
+--
+
+DROP TABLE IF EXISTS `lop`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `lop` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `khoahoc` varchar(255) DEFAULT NULL,
+  `buoihoc` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lop`
+--
+
+LOCK TABLES `lop` WRITE;
+/*!40000 ALTER TABLE `lop` DISABLE KEYS */;
+INSERT INTO `lop` VALUES (1,'CN Game& Mô Phỏng','14','c','2019-08-01 10:28:10'),(2,'Công nghệ phần mềm','14','c','2019-08-01 10:28:22'),(3,'Hệ Thống Thông Tin','14','c','2019-08-01 10:28:33'),(5,'Công Nghệ Dữ Liệu','14','c','2019-08-01 10:29:22'),(6,'Công nghệ phần mềm','15','s','2019-08-01 10:29:32'),(7,'Hệ Thống Thông Tin','15','s','2019-08-01 10:29:43'),(9,'Mạng Máy Tính','14','s','2019-08-01 10:29:52'),(10,'CN Game& Mô Phỏng','15','s','2019-08-01 10:29:59'),(11,'Công Nghệ Thông Tin','15','s','2019-08-01 10:30:33'),(12,'A','65','s','2019-08-01 10:30:56'),(13,'K','65','s','2019-08-01 10:31:05'),(14,'B','65','s','2019-08-01 07:23:11'),(15,'C','65','s','2019-08-01 07:23:29');
+/*!40000 ALTER TABLE `lop` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `monhoc`
+--
+
+DROP TABLE IF EXISTS `monhoc`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `monhoc` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `mamonhoc` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `sotinchi` int(11) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `monhoc`
+--
+
+LOCK TABLES `monhoc` WRITE;
+/*!40000 ALTER TABLE `monhoc` DISABLE KEYS */;
+INSERT INTO `monhoc` VALUES (1,'12261151','Xử lý tín hiệu số(CNTT)',3,'2019-08-01 10:07:51'),(2,'12227151','Trí tuệ nhân tạo',3,'2019-08-01 10:08:23'),(3,'12288151','Trí tuệ nhân tạo nâng cao',3,'2019-08-01 10:08:41'),(4,'12564151','Thiết kế giao diện người sử dụng',3,'2019-08-01 10:09:04'),(5,'12567151','Thực tập kỹ thuật lập trình',3,'2019-08-01 10:09:24'),(6,'12272151','Phát triển trò chơi trực tuyến',3,'2019-08-01 10:09:43'),(7,'12325151','Phân tích thiết kế giải thuật',3,'2019-08-01 10:10:02'),(8,'12571151','Phát triển phần mềm di động',3,'2019-08-01 10:10:30'),(9,'12382151','Phát triển hệ thống quản trị doanh nghiệp',3,'2019-08-01 10:12:14'),(10,'12364151','Lập trình trò chơi và mô phỏng',3,'2019-08-01 10:13:03'),(11,'12500151','Lập trình cơ bản',3,'2019-08-01 10:13:51'),(12,'12556151','Lập trình nâng cao',3,'2019-08-01 10:14:23'),(13,'12322151','Đảm bảo an toàn thông tin',3,'2019-08-01 10:14:47'),(14,'12461151','An ninh mạng',3,'2019-08-01 10:15:05'),(15,'12260151','Công nghệ đa phương tiện',3,'2019-08-01 10:15:53'),(16,'12423151','Cộng nghệ lập trình tích hợp',3,'2019-08-01 10:16:11'),(17,'12374151','Công nghệ web nâng cao',3,'2019-08-01 10:18:38'),(18,'12377151','Cơ bản về điện toán đám mây',3,'2019-08-01 10:22:12'),(19,'12359151','Cơ sở dữ liệu nâng cao',3,'2019-08-01 10:24:53'),(20,'12321151','Cơ sở dữ liệu',4,'2019-08-02 10:25:34'),(21,'12529151','Chuyên đề nâng cao lập trình các cấu trúc dữ liệu',2,'2019-08-02 10:27:44'),(22,'12525151','Kỹ thuật lập trình',3,'2019-08-02 10:35:11'),(23,'12226151','Lý thuyết hệ điều hành',3,'2019-08-02 07:29:07'),(24,'12480151','Quản trị mạng',2,'2019-08-02 07:29:28'),(25,'12471151','Lập trình mạng',2,'2019-08-02 07:30:10'),(26,'12523151','Phương pháp nguyên cưu IT',2,'2019-08-02 07:31:28'),(27,'COMP 497','Thực tập công nghệ 1',2,'2019-08-02 07:32:02'),(28,'COMP 497','Thực tập công nghệ',4,'2019-08-02 08:41:39'),(29,'12264151','Công nghệ XML và web ngữ nghĩa',3,'2019-08-02 08:41:39'),(30,'12565151','Khai phá dữ liệu',3,'2019-10-23 14:18:00'),(31,'12375151','Nhập môn cơ sở dữ liệu lớn',3,'2019-10-23 14:19:29'),(32,'12225151','Đồ Họa Máy Tính',3,'2019-10-23 14:24:45'),(33,'12361151','Phân tích và thiết kế hệ thống',3,'2019-10-23 14:28:20'),(34,'12273151','Thiết kế trò chơi số',3,'2019-10-23 14:29:04'),(35,'12466151','Thương mại điện tử',3,'2019-10-23 14:29:46'),(36,'12474151','Đánh giá an ninh mạng',3,'2019-10-23 14:30:58'),(37,'12559151','Phân tích và mô hình hóa phần mềm',3,'2019-10-23 14:35:29'),(38,'12561151','Thiết kế và xây dựng phần mềm',3,'2019-10-23 14:36:47'),(39,'12562151','Đánh giá chất lượng phần mềm',3,'2019-10-23 14:37:27'),(40,'12558151','Công nghệ Cilent/Server',3,'2019-10-23 14:50:12');
+/*!40000 ALTER TABLE `monhoc` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `phanconggiangday`
+--
+
+DROP TABLE IF EXISTS `phanconggiangday`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `phanconggiangday` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `idmonhoc` int(11) DEFAULT NULL,
+  `idgiangvien` int(11) DEFAULT NULL,
+  `idlop` int(11) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=85 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `phanconggiangday`
+--
+
+LOCK TABLES `phanconggiangday` WRITE;
+/*!40000 ALTER TABLE `phanconggiangday` DISABLE KEYS */;
+INSERT INTO `phanconggiangday` VALUES (1,1,1,10,'2019-04-23 10:31:34'),(7,3,6,1,'2019-04-23 10:32:54'),(11,4,6,1,'2019-04-23 10:33:55'),(16,6,6,1,'2019-04-23 10:37:13'),(18,7,9,7,'2019-04-23 10:37:39'),(19,7,7,9,'2019-04-23 10:37:51'),(20,7,7,10,'2019-04-23 10:38:02'),(48,10,16,10,'2019-04-23 19:02:10'),(73,19,9,7,'2019-10-23 13:57:11'),(74,29,6,1,'2019-10-23 14:00:46'),(75,29,6,5,'2019-10-23 14:01:06'),(76,30,27,5,'2019-10-23 14:18:57'),(77,31,28,5,'2019-10-23 14:20:12'),(78,6,6,1,'2019-10-23 14:23:03'),(79,15,29,1,'2019-10-23 14:23:37'),(80,32,30,10,'2019-10-23 14:25:25'),(81,18,28,9,'2019-10-23 14:33:27'),(82,40,27,2,'2019-10-23 14:54:56'),(83,8,31,2,'2019-10-23 14:55:20'),(84,19,9,2,'2019-10-23 14:56:09');
+/*!40000 ALTER TABLE `phanconggiangday` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `x`
+--
+
+DROP TABLE IF EXISTS `x`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `x` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `value` text,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `tongngay` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `x`
+--
+
+LOCK TABLES `x` WRITE;
+/*!40000 ALTER TABLE `x` DISABLE KEYS */;
+/*!40000 ALTER TABLE `x` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `xlaitao`
+--
+
+DROP TABLE IF EXISTS `xlaitao`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `xlaitao` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `value` text,
+  `tongngay` int(11) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `xlaitao`
+--
+
+LOCK TABLES `xlaitao` WRITE;
+/*!40000 ALTER TABLE `xlaitao` DISABLE KEYS */;
+INSERT INTO `xlaitao` VALUES (1,'[{\"idgiangvien\":1,\"idmonhoc\":5,\"idlop\":6,\"duocdaylop\":0,\"thu\":2,\"tiet\":1,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":1,\"idmonhoc\":5,\"idlop\":6,\"duocdaylop\":0,\"thu\":2,\"tiet\":2,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":1,\"idmonhoc\":5,\"idlop\":6,\"duocdaylop\":0,\"thu\":2,\"tiet\":3,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":1,\"idmonhoc\":6,\"idlop\":7,\"duocdaylop\":0,\"thu\":2,\"tiet\":4,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":1,\"idmonhoc\":6,\"idlop\":7,\"duocdaylop\":0,\"thu\":2,\"tiet\":5,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":3,\"idmonhoc\":12,\"idlop\":7,\"duocdaylop\":0,\"thu\":3,\"tiet\":1,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":3,\"idmonhoc\":12,\"idlop\":7,\"duocdaylop\":0,\"thu\":3,\"tiet\":2,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":3,\"idmonhoc\":12,\"idlop\":7,\"duocdaylop\":0,\"thu\":3,\"tiet\":3,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":3,\"idmonhoc\":12,\"idlop\":9,\"duocdaylop\":0,\"thu\":4,\"tiet\":1,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":3,\"idmonhoc\":12,\"idlop\":9,\"duocdaylop\":0,\"thu\":4,\"tiet\":2,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":3,\"idmonhoc\":12,\"idlop\":9,\"duocdaylop\":0,\"thu\":4,\"tiet\":3,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":3,\"idmonhoc\":12,\"idlop\":10,\"duocdaylop\":0,\"thu\":5,\"tiet\":1,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":3,\"idmonhoc\":12,\"idlop\":10,\"duocdaylop\":0,\"thu\":5,\"tiet\":2,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":3,\"idmonhoc\":12,\"idlop\":10,\"duocdaylop\":0,\"thu\":5,\"tiet\":3,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":4,\"idmonhoc\":10,\"idlop\":6,\"duocdaylop\":0,\"thu\":3,\"tiet\":1,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":4,\"idmonhoc\":10,\"idlop\":6,\"duocdaylop\":0,\"thu\":3,\"tiet\":2,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":5,\"idmonhoc\":6,\"idlop\":10,\"duocdaylop\":0,\"thu\":2,\"tiet\":1,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":5,\"idmonhoc\":6,\"idlop\":10,\"duocdaylop\":0,\"thu\":2,\"tiet\":2,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":5,\"idmonhoc\":8,\"idlop\":12,\"duocdaylop\":0,\"thu\":3,\"tiet\":1,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":5,\"idmonhoc\":8,\"idlop\":12,\"duocdaylop\":0,\"thu\":3,\"tiet\":2,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":5,\"idmonhoc\":8,\"idlop\":13,\"duocdaylop\":0,\"thu\":2,\"tiet\":3,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":5,\"idmonhoc\":8,\"idlop\":13,\"duocdaylop\":0,\"thu\":2,\"tiet\":4,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":7,\"idmonhoc\":7,\"idlop\":7,\"duocdaylop\":0,\"thu\":2,\"tiet\":1,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":7,\"idmonhoc\":7,\"idlop\":9,\"duocdaylop\":0,\"thu\":2,\"tiet\":2,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":7,\"idmonhoc\":7,\"idlop\":10,\"duocdaylop\":0,\"thu\":2,\"tiet\":3,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":8,\"idmonhoc\":6,\"idlop\":9,\"duocdaylop\":0,\"thu\":3,\"tiet\":1,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":8,\"idmonhoc\":6,\"idlop\":9,\"duocdaylop\":0,\"thu\":3,\"tiet\":2,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":8,\"idmonhoc\":22,\"idlop\":6,\"duocdaylop\":0,\"thu\":2,\"tiet\":4,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":8,\"idmonhoc\":22,\"idlop\":6,\"duocdaylop\":0,\"thu\":2,\"tiet\":5,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":9,\"idmonhoc\":28,\"idlop\":14,\"duocdaylop\":0,\"thu\":4,\"tiet\":1,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":9,\"idmonhoc\":28,\"idlop\":14,\"duocdaylop\":0,\"thu\":4,\"tiet\":2,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":9,\"idmonhoc\":28,\"idlop\":14,\"duocdaylop\":0,\"thu\":4,\"tiet\":3,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":9,\"idmonhoc\":28,\"idlop\":14,\"duocdaylop\":0,\"thu\":4,\"tiet\":4,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":9,\"idmonhoc\":28,\"idlop\":15,\"duocdaylop\":0,\"thu\":2,\"tiet\":1,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":9,\"idmonhoc\":28,\"idlop\":15,\"duocdaylop\":0,\"thu\":2,\"tiet\":2,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":9,\"idmonhoc\":28,\"idlop\":15,\"duocdaylop\":0,\"thu\":2,\"tiet\":3,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":9,\"idmonhoc\":28,\"idlop\":15,\"duocdaylop\":0,\"thu\":2,\"tiet\":4,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":15,\"idmonhoc\":17,\"idlop\":7,\"duocdaylop\":0,\"thu\":2,\"tiet\":2,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":15,\"idmonhoc\":17,\"idlop\":7,\"duocdaylop\":0,\"thu\":2,\"tiet\":3,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":15,\"idmonhoc\":17,\"idlop\":9,\"duocdaylop\":0,\"thu\":2,\"tiet\":1,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":15,\"idmonhoc\":17,\"idlop\":9,\"duocdaylop\":0,\"thu\":2,\"tiet\":4,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":15,\"idmonhoc\":17,\"idlop\":10,\"duocdaylop\":0,\"thu\":3,\"tiet\":1,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":15,\"idmonhoc\":17,\"idlop\":10,\"duocdaylop\":0,\"thu\":3,\"tiet\":2,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":16,\"idmonhoc\":26,\"idlop\":12,\"duocdaylop\":0,\"thu\":3,\"tiet\":3,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":16,\"idmonhoc\":26,\"idlop\":12,\"duocdaylop\":0,\"thu\":3,\"tiet\":4,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":16,\"idmonhoc\":26,\"idlop\":12,\"duocdaylop\":0,\"thu\":3,\"tiet\":5,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":16,\"idmonhoc\":26,\"idlop\":13,\"duocdaylop\":0,\"thu\":4,\"tiet\":1,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":16,\"idmonhoc\":26,\"idlop\":13,\"duocdaylop\":0,\"thu\":4,\"tiet\":2,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":16,\"idmonhoc\":26,\"idlop\":13,\"duocdaylop\":0,\"thu\":4,\"tiet\":3,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":16,\"idmonhoc\":27,\"idlop\":13,\"duocdaylop\":0,\"thu\":4,\"tiet\":4,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":16,\"idmonhoc\":27,\"idlop\":13,\"duocdaylop\":0,\"thu\":4,\"tiet\":5,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":17,\"idmonhoc\":25,\"idlop\":12,\"duocdaylop\":0,\"thu\":2,\"tiet\":1,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":17,\"idmonhoc\":25,\"idlop\":12,\"duocdaylop\":0,\"thu\":2,\"tiet\":2,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":17,\"idmonhoc\":25,\"idlop\":13,\"duocdaylop\":0,\"thu\":3,\"tiet\":1,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":17,\"idmonhoc\":25,\"idlop\":13,\"duocdaylop\":0,\"thu\":3,\"tiet\":2,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":17,\"idmonhoc\":27,\"idlop\":12,\"duocdaylop\":0,\"thu\":2,\"tiet\":3,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":17,\"idmonhoc\":27,\"idlop\":12,\"duocdaylop\":0,\"thu\":2,\"tiet\":4,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":17,\"idmonhoc\":27,\"idlop\":14,\"duocdaylop\":0,\"thu\":3,\"tiet\":4,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":17,\"idmonhoc\":27,\"idlop\":14,\"duocdaylop\":0,\"thu\":3,\"tiet\":5,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":17,\"idmonhoc\":27,\"idlop\":15,\"duocdaylop\":0,\"thu\":5,\"tiet\":4,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":17,\"idmonhoc\":27,\"idlop\":15,\"duocdaylop\":0,\"thu\":5,\"tiet\":5,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":18,\"idmonhoc\":23,\"idlop\":14,\"duocdaylop\":0,\"thu\":2,\"tiet\":1,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":18,\"idmonhoc\":23,\"idlop\":14,\"duocdaylop\":0,\"thu\":2,\"tiet\":2,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":18,\"idmonhoc\":23,\"idlop\":14,\"duocdaylop\":0,\"thu\":2,\"tiet\":3,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":18,\"idmonhoc\":23,\"idlop\":14,\"duocdaylop\":0,\"thu\":2,\"tiet\":4,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":18,\"idmonhoc\":23,\"idlop\":15,\"duocdaylop\":0,\"thu\":4,\"tiet\":1,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":18,\"idmonhoc\":23,\"idlop\":15,\"duocdaylop\":0,\"thu\":4,\"tiet\":2,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":18,\"idmonhoc\":23,\"idlop\":15,\"duocdaylop\":0,\"thu\":4,\"tiet\":3,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":18,\"idmonhoc\":23,\"idlop\":15,\"duocdaylop\":0,\"thu\":4,\"tiet\":4,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":18,\"idmonhoc\":24,\"idlop\":14,\"duocdaylop\":0,\"thu\":3,\"tiet\":1,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":18,\"idmonhoc\":24,\"idlop\":14,\"duocdaylop\":0,\"thu\":3,\"tiet\":2,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":18,\"idmonhoc\":24,\"idlop\":14,\"duocdaylop\":0,\"thu\":3,\"tiet\":3,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":18,\"idmonhoc\":24,\"idlop\":15,\"duocdaylop\":0,\"thu\":5,\"tiet\":1,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":18,\"idmonhoc\":24,\"idlop\":15,\"duocdaylop\":0,\"thu\":5,\"tiet\":2,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":18,\"idmonhoc\":24,\"idlop\":15,\"duocdaylop\":0,\"thu\":5,\"tiet\":3,\"buoihoc\":\"s\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":1,\"idmonhoc\":1,\"idlop\":2,\"duocdaylop\":0,\"thu\":5,\"tiet\":6,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":1,\"idmonhoc\":1,\"idlop\":2,\"duocdaylop\":0,\"thu\":5,\"tiet\":7,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":1,\"idmonhoc\":1,\"idlop\":3,\"duocdaylop\":0,\"thu\":5,\"tiet\":8,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":1,\"idmonhoc\":1,\"idlop\":3,\"duocdaylop\":0,\"thu\":5,\"tiet\":9,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":4,\"idmonhoc\":9,\"idlop\":3,\"duocdaylop\":0,\"thu\":6,\"tiet\":6,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":4,\"idmonhoc\":9,\"idlop\":3,\"duocdaylop\":0,\"thu\":6,\"tiet\":7,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":4,\"idmonhoc\":9,\"idlop\":3,\"duocdaylop\":0,\"thu\":6,\"tiet\":8,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":5,\"idmonhoc\":2,\"idlop\":2,\"duocdaylop\":0,\"thu\":3,\"tiet\":6,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":5,\"idmonhoc\":2,\"idlop\":2,\"duocdaylop\":0,\"thu\":3,\"tiet\":7,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":5,\"idmonhoc\":2,\"idlop\":3,\"duocdaylop\":0,\"thu\":3,\"tiet\":8,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":5,\"idmonhoc\":2,\"idlop\":3,\"duocdaylop\":0,\"thu\":3,\"tiet\":9,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":6,\"idmonhoc\":3,\"idlop\":1,\"duocdaylop\":0,\"thu\":5,\"tiet\":6,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":6,\"idmonhoc\":3,\"idlop\":1,\"duocdaylop\":0,\"thu\":5,\"tiet\":7,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":6,\"idmonhoc\":3,\"idlop\":2,\"duocdaylop\":0,\"thu\":4,\"tiet\":6,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":6,\"idmonhoc\":3,\"idlop\":2,\"duocdaylop\":0,\"thu\":4,\"tiet\":7,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":6,\"idmonhoc\":3,\"idlop\":3,\"duocdaylop\":0,\"thu\":4,\"tiet\":8,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":6,\"idmonhoc\":3,\"idlop\":3,\"duocdaylop\":0,\"thu\":4,\"tiet\":9,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":6,\"idmonhoc\":3,\"idlop\":5,\"duocdaylop\":0,\"thu\":3,\"tiet\":6,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":6,\"idmonhoc\":3,\"idlop\":5,\"duocdaylop\":0,\"thu\":3,\"tiet\":7,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":6,\"idmonhoc\":4,\"idlop\":1,\"duocdaylop\":0,\"thu\":6,\"tiet\":6,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":6,\"idmonhoc\":4,\"idlop\":1,\"duocdaylop\":0,\"thu\":6,\"tiet\":7,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":6,\"idmonhoc\":4,\"idlop\":1,\"duocdaylop\":0,\"thu\":6,\"tiet\":8,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":6,\"idmonhoc\":4,\"idlop\":5,\"duocdaylop\":0,\"thu\":5,\"tiet\":8,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":6,\"idmonhoc\":4,\"idlop\":5,\"duocdaylop\":0,\"thu\":5,\"tiet\":9,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":6,\"idmonhoc\":4,\"idlop\":5,\"duocdaylop\":0,\"thu\":5,\"tiet\":10,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":7,\"idmonhoc\":2,\"idlop\":1,\"duocdaylop\":0,\"thu\":2,\"tiet\":6,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":7,\"idmonhoc\":2,\"idlop\":1,\"duocdaylop\":0,\"thu\":2,\"tiet\":7,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":7,\"idmonhoc\":2,\"idlop\":5,\"duocdaylop\":0,\"thu\":2,\"tiet\":8,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":7,\"idmonhoc\":2,\"idlop\":5,\"duocdaylop\":0,\"thu\":2,\"tiet\":9,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":9,\"idmonhoc\":13,\"idlop\":1,\"duocdaylop\":0,\"thu\":3,\"tiet\":6,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":9,\"idmonhoc\":13,\"idlop\":1,\"duocdaylop\":0,\"thu\":3,\"tiet\":7,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":9,\"idmonhoc\":13,\"idlop\":1,\"duocdaylop\":0,\"thu\":3,\"tiet\":8,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":9,\"idmonhoc\":13,\"idlop\":5,\"duocdaylop\":0,\"thu\":4,\"tiet\":6,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":9,\"idmonhoc\":13,\"idlop\":5,\"duocdaylop\":0,\"thu\":4,\"tiet\":7,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":9,\"idmonhoc\":13,\"idlop\":5,\"duocdaylop\":0,\"thu\":4,\"tiet\":8,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":9,\"idmonhoc\":14,\"idlop\":2,\"duocdaylop\":0,\"thu\":2,\"tiet\":6,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":9,\"idmonhoc\":14,\"idlop\":2,\"duocdaylop\":0,\"thu\":2,\"tiet\":7,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":9,\"idmonhoc\":14,\"idlop\":3,\"duocdaylop\":0,\"thu\":2,\"tiet\":8,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":9,\"idmonhoc\":14,\"idlop\":3,\"duocdaylop\":0,\"thu\":2,\"tiet\":9,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":11,\"idmonhoc\":15,\"idlop\":5,\"duocdaylop\":0,\"thu\":6,\"tiet\":9,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":11,\"idmonhoc\":15,\"idlop\":5,\"duocdaylop\":0,\"thu\":6,\"tiet\":10,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":11,\"idmonhoc\":16,\"idlop\":2,\"duocdaylop\":0,\"thu\":6,\"tiet\":6,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":11,\"idmonhoc\":16,\"idlop\":2,\"duocdaylop\":0,\"thu\":6,\"tiet\":7,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":11,\"idmonhoc\":16,\"idlop\":2,\"duocdaylop\":0,\"thu\":6,\"tiet\":8,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":15,\"idmonhoc\":21,\"idlop\":1,\"duocdaylop\":0,\"thu\":4,\"tiet\":6,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1},{\"idgiangvien\":15,\"idmonhoc\":21,\"idlop\":1,\"duocdaylop\":0,\"thu\":4,\"tiet\":7,\"buoihoc\":\"c\",\"duocdaytiet\":0,\"duocdayloptaitiet\":1}]',32,'2019-04-25 08:59:50');
+/*!40000 ALTER TABLE `xlaitao` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `xrandom`
 --
 
@@ -49,4 +257,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-10-23 22:57:04
+-- Dump completed on 2019-10-25 23:27:10
