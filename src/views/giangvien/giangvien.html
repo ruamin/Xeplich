@@ -23,19 +23,19 @@
     <div class="divider"></div>
     <div class="row">
       <div class="col s12">
-        <table class="striped">
+        <table class="centered striped">
           <thead class="table-head ">
             <tr>
               <th>STT</th>  
               <th>Giảng Viên</th>
               <th>Mã giảng viên</th>
               <th>Ghi Chú</th>
-              <th>Hành Động</th>
+              <th> Hành Động</th>
             </tr>
           </thead>
           <tbody class="gv-table-body">
             {% for teacher in listTeacher %}
-            <tr id="giangvien-{{teacher.id}}">
+            <tr  id="giangvien-{{teacher.id}}">
               <td>{{ loop.index }}</td>
               <td>{{ teacher.name }}</td>
               <td>{{ teacher.id }}</td>
