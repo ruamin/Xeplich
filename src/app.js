@@ -730,9 +730,9 @@ const kiemTraGiangBuocLaiTao = async () => {
   }
 
   const listThemVaoX = await Promise.all(listPromise)
-  console.log('========================================')
-  console.log('listThemVaoX laitao', listThemVaoX.length)
-  console.log('========================================')
+  // console.log('========================================')
+  // console.log('listThemVaoX laitao', listThemVaoX.length)
+  // console.log('========================================')
   return listThemVaoX.length
 }
 
@@ -820,17 +820,17 @@ app.get('/tkb/laitao', async (req, res) => {
         listSauLaiTaoPromise.push(knex('xlaitao').insert({ value: JSON.stringify(xmoi4) }))
       }
       const listSauLaiTaoThemThanhCong = await Promise.all(listSauLaiTaoPromise)
-      console.log('========================================')
-      console.log('listSauLaiTaoThemThanhCong =', listSauLaiTaoThemThanhCong.length)
-      console.log('========================================')
+      // console.log('========================================')
+      // console.log('listSauLaiTaoThemThanhCong =', listSauLaiTaoThemThanhCong.length)
+      // console.log('========================================')
     } while (await kiemTraGiangBuocLaiTao() !== 1)
 
     // Lay phan tu tkb de lai tao
     const layPhanTuDeTaoDotBien = await knex('xlaitao').select().first()
 
-    console.log('================================================')
-    console.log('layPhanTuDeTaoDotBien', layPhanTuDeTaoDotBien)
-    console.log('================================================')
+    // console.log('================================================')
+    // console.log('layPhanTuDeTaoDotBien', layPhanTuDeTaoDotBien)
+    // console.log('================================================')
     await taoTkbDotBien(JSON.stringify(layPhanTuDeTaoDotBien.value))
 
     await kiemTraGiangBuocLaiTao()
@@ -855,6 +855,10 @@ app.get('/tkb/lop', async (req, res) => {
     ])
 
     const tkb = await knex('xlaitao').select().where('id', idtkb).first()
+      console.log('========================================')
+      console.log('xlaitao ', tkb.length);
+      console.log('========================================')
+    
     const tkbCuoi = JSON.parse(tkb.value)
     let danhsachDuocSapXep = _.sortBy(tkbCuoi, ['thu', 'tiet'])
 
@@ -875,9 +879,9 @@ app.get('/tkb/lop', async (req, res) => {
     let thongTinLop
     if (lop) {
       tkbThemThongTin = _.filter(tkbThemThongTin, { idlop: parseInt(lop) })
-      console.log('========================================')
-      console.log('tkbThemThongTin ', tkbThemThongTin)
-      console.log('========================================')
+      // console.log('========================================')
+      // console.log('tkbThemThongTin ', tkbThemThongTin)
+      // console.log('========================================')
       thongTinLop = _.filter(listClassNew, { id: parseInt(lop) })[0]
       const danhSachMonHocCuaLop = _.filter(listPhanCongGiangDay, { idlop: thongTinLop.id })
       const danhSachTkb = []
@@ -886,9 +890,9 @@ app.get('/tkb/lop', async (req, res) => {
 
         const thongTinTietHocCuaMonHienTai = _.filter(tkbThemThongTin, { idmonhoc: monHocHienTai.idmonhoc })
         if (thongTinTietHocCuaMonHienTai.length) {
-          console.log('========================================')
-          console.log('thongTinTietHocCuaMonHienTai ', thongTinTietHocCuaMonHienTai)
-          console.log('========================================')
+          // console.log('========================================')
+          // console.log('thongTinTietHocCuaMonHienTai ', thongTinTietHocCuaMonHienTai)
+          // console.log('========================================')
           const thuHocHienTai = thongTinTietHocCuaMonHienTai[0].thu
           let tietHocHienTai = thongTinTietHocCuaMonHienTai[0].tiet
           for (let indexTietMon = 1; indexTietMon < thongTinTietHocCuaMonHienTai.length; indexTietMon++) {
