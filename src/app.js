@@ -40,7 +40,7 @@ app.get('/', async (req, res) => {
   if (req.session.loggedin) {
     res.render('home/home.html') 
   } else {
-    res.send('Please login to view this page!');
+    res.send('Please <a href="/account/login">login</a> to view this page!');
    
   }
 
