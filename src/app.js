@@ -1,12 +1,21 @@
+
 const path = require('path')
 const express = require('express')
 const nunjucks = require('nunjucks')
 const bodyParser = require('body-parser')
+const session = require('express-session');
 const _ = require('lodash')
 const dbConfig = require('./config')
 const knex = require('knex')(dbConfig)
 const app = express()
 
+app.use(session({
+  secret: 'secret',
+  resave: true,
+  saveUninitialized: true
+}));
+
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.resolve(__dirname, './public')))
 app.set('views', path.resolve(__dirname, './views'))
 nunjucks.configure(path.resolve(__dirname, './views'), {
@@ -17,11 +26,27 @@ app.set('view engine', 'html')
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+var sess; // global session, NOT recommended
+
+function checkSession() {
+  if (sess != undefined) {
+    return true;
+  } else {
+    return false
+  }
+}
+
 app.get('/', async (req, res) => {
-  res.render('home/home.html')
+  if (req.session.loggedin) {
+    res.render('home/home.html') 
+  } else {
+    res.send('Please login to view this page!');
+   
+  }
+
 })
 
-function filterTkbNew (tkb) {
+function filterTkbNew(tkb) {
   return [
     _.filter(tkb, { tiet: 1 }),
     _.filter(tkb, { tiet: 2 }),
@@ -38,7 +63,7 @@ function filterTkbNew (tkb) {
   ]
 }
 
-function demNgayDayY (tkb, idgiangvien, thu) {
+function demNgayDayY(tkb, idgiangvien, thu) {
   const gioday = _.filter(tkb, { idgiangvien, thu })
   if (gioday.length) {
     return 1
@@ -47,7 +72,7 @@ function demNgayDayY (tkb, idgiangvien, thu) {
 }
 
 // Không giảng viên nào dạy 2 lớp trong cùng thời gian
-function giangBuocHC1 (tkb, idgiangvien, idmonhoc, thu, tiet) {
+function giangBuocHC1(tkb, idgiangvien, idmonhoc, thu, tiet) {
   const result = _.filter(tkb, { idgiangvien, idmonhoc, thu, tiet })
   if (result.length >= 2) {
     console.log('Loi giang buoc 1')
@@ -56,7 +81,7 @@ function giangBuocHC1 (tkb, idgiangvien, idmonhoc, thu, tiet) {
   return true
 }
 //  Không lớp nào phải học 2 môn trong cùng 1 thời gian
-function giangBuocHC2 (tkb, idlop, thu, tiet) {
+function giangBuocHC2(tkb, idlop, thu, tiet) {
   const result = _.filter(tkb, { idlop, thu, tiet })
   if (result.length >= 2) {
     console.log('Loi giang buoc 2')
@@ -65,7 +90,7 @@ function giangBuocHC2 (tkb, idlop, thu, tiet) {
   return true
 }
 // Giảng viên phải dạy đúng lớp và đúng môn học được giao
-function giangBuocHC3 (tkb, A, idgiangvien, idmonhoc, idlop, thu, tiet) {
+function giangBuocHC3(tkb, A, idgiangvien, idmonhoc, idlop, thu, tiet) {
   const resultTkb = _.filter(tkb, { idgiangvien, idmonhoc, idlop, thu, tiet })
   const lopPhanCong = _.filter(A, { idgiangvien, idmonhoc, idlop, duocdaylop: 0 })// dc day
   if (lopPhanCong[0].duocdaylop * resultTkb[0].duocdayloptaitiet === 0) {
@@ -74,7 +99,7 @@ function giangBuocHC3 (tkb, A, idgiangvien, idmonhoc, idlop, thu, tiet) {
   return false
 }
 // Mỗi giảng viên dạy 1 môn nào đó phải đủ số lớp theo phân công
-function giangBuocHC4 (tkb, monhoc, A, idgiangvien, idmonhoc) {
+function giangBuocHC4(tkb, monhoc, A, idgiangvien, idmonhoc) {
   const resultTkb = _.filter(tkb, { idgiangvien, idmonhoc })
   const filterMon = _.filter(monhoc, { id: idmonhoc })[0]
   const resultA = _.filter(A, { idgiangvien, idmonhoc, duocdaylop: 0 })
@@ -85,7 +110,7 @@ function giangBuocHC4 (tkb, monhoc, A, idgiangvien, idmonhoc) {
   return false
 }
 // Mỗi giảng viên phải dạy đủ số môn
-function giangBuocHC5 (tkb, monhoc, A, idgiangvien, idmonhoc) {
+function giangBuocHC5(tkb, monhoc, A, idgiangvien, idmonhoc) {
   const resultAGvDuocDayMonHoc = _.filter(A, { idgiangvien, idmonhoc, duocdaylop: 0 })
   const resultTkbCuaGVDayMonHoc = _.filter(tkb, { idgiangvien, idmonhoc })
   const filterMonHoc = _.filter(monhoc, { id: idmonhoc })[0]
@@ -96,7 +121,7 @@ function giangBuocHC5 (tkb, monhoc, A, idgiangvien, idmonhoc) {
   return false
 }
 // Các lớp học đúng thời gian được phân công
-function giangBuocHC6 (tkb, A, idgiangvien, idmonhoc, idlop, thu, tiet, monhoc) {
+function giangBuocHC6(tkb, A, idgiangvien, idmonhoc, idlop, thu, tiet, monhoc) {
   const resultTkbGvDayMonTaiThuTiet = _.filter(tkb, { idgiangvien, idmonhoc, idlop, thu, tiet })
   const lopPhanCongCuaDv = _.filter(A, { idgiangvien, idmonhoc, idlop, duocdaylop: 0 })
   const filterMonHoc = _.filter(monhoc, { id: idmonhoc })[0]
@@ -105,7 +130,7 @@ function giangBuocHC6 (tkb, A, idgiangvien, idmonhoc, idlop, thu, tiet, monhoc) 
   }
   return false
 }
-function giangBuocMem (tkb, monhoc, A, idgiangvien, idmonhoc) {
+function giangBuocMem(tkb, monhoc, A, idgiangvien, idmonhoc) {
   const resultTkbGvMon = _.filter(tkb, { idgiangvien, idmonhoc })
   const filterMonGBM = _.filter(monhoc, { id: idmonhoc })
   const resultAGBM = _.filter(A, { idgiangvien, idmonhoc, duocdaylop: 0 })
@@ -115,7 +140,7 @@ function giangBuocMem (tkb, monhoc, A, idgiangvien, idmonhoc) {
   console.log('Loi giang buoc mem')
   return false
 }
-function kiemTra (arrayX, A, monhoc, listTkbOke = []) {
+function kiemTra(arrayX, A, monhoc, listTkbOke = []) {
   for (let index = 0; index < arrayX.length; index++) {
     const tkb = arrayX[index]
     let KT = true
@@ -185,30 +210,30 @@ app.get('/:type', async (req, res) => {
       break
     }
     case 'phanconggiangday2':
-    {
-      const [listTeacherGiangDay, listClassGiangDay, listSubjectGiangDay, listPhanCongGiangDay] = await Promise.all([
-        await knex('giangvien').select(),
-        await knex('lop').select(),
-        await knex('monhoc').select(),
-        await knex('phanconggiangday2').select()
-      ])
-      for (let index = 0; index < listPhanCongGiangDay.length; index++) {
-        const giangVien = _.filter(listTeacherGiangDay, { id: listPhanCongGiangDay[index].idgiangvien })
-        const lopHoc = _.filter(listClassGiangDay, { id: listPhanCongGiangDay[index].idlop })
-        const monHoc = _.filter(listSubjectGiangDay, { id: listPhanCongGiangDay[index].idmonhoc })
-        listPhanCongGiangDay[index].chiTietGv = giangVien[0]
-        listPhanCongGiangDay[index].chiTietLopHoc = lopHoc[0]
-        listPhanCongGiangDay[index].chiTietMonHoc = monHoc[0]
+      {
+        const [listTeacherGiangDay, listClassGiangDay, listSubjectGiangDay, listPhanCongGiangDay] = await Promise.all([
+          await knex('giangvien').select(),
+          await knex('lop').select(),
+          await knex('monhoc').select(),
+          await knex('phanconggiangday2').select()
+        ])
+        for (let index = 0; index < listPhanCongGiangDay.length; index++) {
+          const giangVien = _.filter(listTeacherGiangDay, { id: listPhanCongGiangDay[index].idgiangvien })
+          const lopHoc = _.filter(listClassGiangDay, { id: listPhanCongGiangDay[index].idlop })
+          const monHoc = _.filter(listSubjectGiangDay, { id: listPhanCongGiangDay[index].idmonhoc })
+          listPhanCongGiangDay[index].chiTietGv = giangVien[0]
+          listPhanCongGiangDay[index].chiTietLopHoc = lopHoc[0]
+          listPhanCongGiangDay[index].chiTietMonHoc = monHoc[0]
+        }
+        res.render(template, {
+          listTeacherGiangDay,
+          listClassGiangDay,
+          listSubjectGiangDay,
+          listPhanCongGiangDay,
+          numberOfSuject: listSubjectGiangDay.length
+        })
+        break
       }
-      res.render(template, {
-        listTeacherGiangDay,
-        listClassGiangDay,
-        listSubjectGiangDay,
-        listPhanCongGiangDay,
-        numberOfSuject: listSubjectGiangDay.length
-      })
-      break
-    }
     case 'lop':
       const listClassNeww = await knex('lop').select()
       res.render(template, {
@@ -231,7 +256,7 @@ app.get('/tkb/sinhtkb', async (req, res) => {
   ])
 
   const danhSachThuHoc = [2, 3, 4, 5, 6]
-  const danhTietHocTrongNgay = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11,12]
+  const danhTietHocTrongNgay = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
   // Tao mang A phan cong mon hoc: { idgiangvien: 2, idmonhoc: 2, idlop: 2, duocdaylop: 0 }
   const A = []
@@ -355,9 +380,9 @@ app.get('/tkb/sinhtkb', async (req, res) => {
             const tietCuoiCungGiangVienDay = filterSoTietGvDaDayTheoBuoi.length ? filterSoTietGvDaDayTheoBuoi[filterSoTietGvDaDayTheoBuoi.length - 1].tiet : 0
             const soTietConLaiTrongBuoiCuaGiangVien = listClassNew[indexLop].buoihoc === 's' ? 6 - tietCuoiCungGiangVienDay : 12 - tietCuoiCungGiangVienDay
             if ((5 - filterSoTietLopDaHocTheoBuoi.length) >= thongTinMonHoc.sotinchi &&
-            (5 - filterSoTietGvDaDayTheoBuoi.length) >= thongTinMonHoc.sotinchi &&
-            soTietConLaiTrongBuoiCuaGiangVien >= thongTinMonHoc.sotinchi &&
-            (5 - (filterSoTietLopDaHocTheoBuoi.length ? filterSoTietLopDaHocTheoBuoi[filterSoTietLopDaHocTheoBuoi.length - 1].tiet : 0)) >= thongTinMonHoc.sotinchi) {
+              (5 - filterSoTietGvDaDayTheoBuoi.length) >= thongTinMonHoc.sotinchi &&
+              soTietConLaiTrongBuoiCuaGiangVien >= thongTinMonHoc.sotinchi &&
+              (5 - (filterSoTietLopDaHocTheoBuoi.length ? filterSoTietLopDaHocTheoBuoi[filterSoTietLopDaHocTheoBuoi.length - 1].tiet : 0)) >= thongTinMonHoc.sotinchi) {
               for (let indexTiet = 0; indexTiet < danhTietHocTrongNgay.length; indexTiet++) {
                 if (soTinChiCuaMon >= thongTinMonHoc.sotinchi) {
                   KT = false
@@ -373,7 +398,7 @@ app.get('/tkb/sinhtkb', async (req, res) => {
                   duocdayloptaitiet: 1
                 })
                 if (!kiemTraXemGvDoTaiThuDoTietDoDaDayLopNaoChua.length) {
-                // HC2
+                  // HC2
                   const kiemTraXemLopDoTaiThuDoTietDoDaHocMonNaoChua = _.filter(X, {
                     idlop: listClassNew[indexLop].id,
                     thu: thuHoc,
@@ -855,10 +880,10 @@ app.get('/tkb/lop', async (req, res) => {
     ])
 
     const tkb = await knex('xlaitao').select().where('id', idtkb).first()
-      console.log('========================================')
-      console.log('xlaitao ', tkb.length);
-      console.log('========================================')
-    
+    console.log('========================================')
+    console.log('xlaitao ', tkb.length);
+    console.log('========================================')
+
     const tkbCuoi = JSON.parse(tkb.value)
     let danhsachDuocSapXep = _.sortBy(tkbCuoi, ['thu', 'tiet'])
 
@@ -1135,5 +1160,47 @@ app.post('/lop', async (req, res, next) => {
     })
   }
 })
+
+
+// Login
+app.get('/account/login', async (req, res) => {
+  if (req.session.loggedin) {
+    return  res.render('home/home.html') 
+  } else { 
+    return res.render('account/login.html'); 
+  }
+});
+
+
+
+app.post('/account/login', async (req, res, next) => {
+  try {
+    console.log("Login");
+    var logins = await knex('account').select();
+    var user;
+    for (let index = 0; index < logins.length; index++) {
+      if (logins[index].username == req.body.username && logins[index].password == req.body.password) {
+        user = logins[index];
+      }
+    }
+    console.log(user)
+    if (user.username) {
+      req.session.loggedin = true;
+      req.session.username = user.username;
+      return res.redirect('/');
+      
+    } else {
+      return res.redirect('/account/login');
+    }
+    //res.end(); 
+  } catch (error) {
+    return res.redirect('/account/login');
+
+  }
+})
+app.get('/account/logout', function (req, res) {
+  req.session.destroy();
+  return res.redirect('/account/login');
+ });
 
 module.exports = app

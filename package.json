@@ -4,8 +4,9 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "body-parser": "1.18.3",
+    "body-parser": "^1.18.3",
     "express": "4.16.4",
+    "express-session": "^1.17.0",
     "knex": "0.16.3",
     "lodash": "^4.17.15",
     "mysql": "2.16.0",
@@ -18,7 +19,8 @@
     "eslint-plugin-import": "2.16.0",
     "eslint-plugin-node": "8.0.1",
     "eslint-plugin-promise": "4.0.1",
-    "eslint-plugin-standard": "4.0.0"
+    "eslint-plugin-standard": "4.0.0",
+    "nodemon": "^1.19.4"
   },
   "version": "0.0.0"
 }
