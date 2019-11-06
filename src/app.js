@@ -277,7 +277,6 @@ app.get('/tkb/sinhtkb', async (req, res) => {
       }
     }
   }
-
   const L = []
   // Tao mang L thời gian có thể học của lớp: { idlop: 2, thu: 2, tiet: 1, duocdaytiet: 0 }
 
@@ -341,8 +340,7 @@ app.get('/tkb/sinhtkb', async (req, res) => {
 
   // For mảng A phân công giảng dạy : 0 được dạy - 1 không được dạy ({ idgiangvien: 2, idmonhoc: 2, idlop: 2, duocdaylop: 0 })
   let dem = 0
-  // listTeacherNew = _.shuffle(listTeacherNew)
-
+  listTeacherNew = _.shuffle(listTeacherNew)
   for (let indexGV = 0; indexGV < listTeacherNew.length; indexGV++) {
     const phanCongGiangDayCuaGvHienTai = _.filter(A, { idgiangvien: listTeacherNew[indexGV].id, duocdaylop: 0 })
     for (let indexLop = 0; indexLop < listClassNew.length; indexLop++) {
@@ -379,10 +377,10 @@ app.get('/tkb/sinhtkb', async (req, res) => {
             })
             const tietCuoiCungGiangVienDay = filterSoTietGvDaDayTheoBuoi.length ? filterSoTietGvDaDayTheoBuoi[filterSoTietGvDaDayTheoBuoi.length - 1].tiet : 0
             const soTietConLaiTrongBuoiCuaGiangVien = listClassNew[indexLop].buoihoc === 's' ? 6 - tietCuoiCungGiangVienDay : 12 - tietCuoiCungGiangVienDay
-            if ((5 - filterSoTietLopDaHocTheoBuoi.length) >= thongTinMonHoc.sotinchi &&
-              (5 - filterSoTietGvDaDayTheoBuoi.length) >= thongTinMonHoc.sotinchi &&
+            if ((6 - filterSoTietLopDaHocTheoBuoi.length) >= thongTinMonHoc.sotinchi &&
+              (6 - filterSoTietGvDaDayTheoBuoi.length) >= thongTinMonHoc.sotinchi &&
               soTietConLaiTrongBuoiCuaGiangVien >= thongTinMonHoc.sotinchi &&
-              (5 - (filterSoTietLopDaHocTheoBuoi.length ? filterSoTietLopDaHocTheoBuoi[filterSoTietLopDaHocTheoBuoi.length - 1].tiet : 0)) >= thongTinMonHoc.sotinchi) {
+              (6 - (filterSoTietLopDaHocTheoBuoi.length ? filterSoTietLopDaHocTheoBuoi[filterSoTietLopDaHocTheoBuoi.length - 1].tiet : 0)) >= thongTinMonHoc.sotinchi) {
               for (let indexTiet = 0; indexTiet < danhTietHocTrongNgay.length; indexTiet++) {
                 if (soTinChiCuaMon >= thongTinMonHoc.sotinchi) {
                   KT = false
