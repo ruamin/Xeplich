@@ -526,15 +526,15 @@ app.get('/tkb/giangbuoc', async (req, res) => {
       const jsonXAfterSort = _.sortBy(jsonX, ['thu', 'tiet'])
       let KT_NGOAI = true
 
-      for (let indexGv = 0; indexGv < listTeacherNew.length; indexGv++) {
-        let KT = true
-        const giangvienHienTai = listTeacherNew[indexGv]
-        const listTietHocGv = _.filter(jsonXAfterSort, { idgiangvien: giangvienHienTai.id })
+      // for (let indexGv = 0; indexGv < listTeacherNew.length; indexGv++) {
+      //   let KT = true
+      //   const giangvienHienTai = listTeacherNew[indexGv]
+      //   const listTietHocGv = _.filter(jsonXAfterSort, { idgiangvien: giangvienHienTai.id })
 
-        if (!KT) {
-          break
-        }
-      }
+      //   if (!KT) {
+      //     break
+      //   }
+      // }
 
       if (KT_NGOAI) {
         listDung.push({ id: indexX })
@@ -829,7 +829,6 @@ app.get('/tkb/laitao', async (req, res) => {
         const chieuX1 = _.filter(x1, (tkb) => {
           return tkb.tiet >= 7 && tkb.tiet <= 12
         })
-
         const x2 = JSON.parse(listX[indexX1 + 1].value)
         const sangX2 = _.filter(x2, (tkb) => {
           return tkb.tiet >= 1 && tkb.tiet <= 6
