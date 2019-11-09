@@ -1,7 +1,8 @@
 {
   "scripts": {
     "start:dev": "pm2-dev index.js",
-    "start": "node index.js"
+    "start": "node index.js",
+    "migrate:latest": "knex migrate:latest"
   },
   "dependencies": {
     "body-parser": "^1.18.3",

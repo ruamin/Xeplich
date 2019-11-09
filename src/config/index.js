@@ -12,7 +12,8 @@ const dbConfig = process.env.NODE_ENV === 'production' ? {
     host: 'localhost',
     user: 'root',
     password: '123qwe',
-    database: 'xeplichmta' 
+//    database: 'xeplichmta' 
+    database: 'xeplich' 
   }
 }
 
