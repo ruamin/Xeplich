@@ -360,6 +360,8 @@ app.get("/tkb/sinhtkb", async (req, res) => {
       }
     });
   });
+  console.log({A});
+  
   const L = [];
   // Tao mang L thời gian có thể học của lớp: { idlop: 2,phong: 1, thu: 2, tiet: 1, duocdaytiet: 0 }
 
@@ -367,12 +369,12 @@ app.get("/tkb/sinhtkb", async (req, res) => {
     listRoomNew.map((giangduong)=>{
       danhSachThuHoc.map((thu)=>{
         danhTietHocTrongNgay.map((tiet)=>{
-          L.push({idlophocphan:lophocphan.id, thu, tiet, idroom:giangduong.id})
+          L.push({idlophocphan:lophocphan.id, thu, tiet, idgiangduong:giangduong.id})
         });
       });
     });
   });
- // console.log(L);
+  console.log(L);
   // for (let lop = 0; lop < listClassNew.length; lop++) {
   //   for (let thuhoc = 0; thuhoc < danhSachThuHoc.length; thuhoc++) {
   //     for (let tiethoc = 0; tiethoc < danhTietHocTrongNgay.length; tiethoc++) {
@@ -438,7 +440,7 @@ app.get("/tkb/sinhtkb", async (req, res) => {
     X.push(x);
   });
 });
-//console.log(X);
+console.log(X);
   // const X = [];
   // for (let index = 0; index < A.length; index++) {
   //   const listLop = _.filter(L, { idlop: A[index].idlop });
