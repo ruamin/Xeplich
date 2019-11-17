@@ -2,11 +2,11 @@
 {% block content %}
 <div class="row">
   <div class="col m8 offset-m2 s12">
-    <form action="/edit/phanconggiangday/{{dataEdit.id}}" method="POST" class="col s12 card-panel form-input">
+    <form action="/edit/phanconggiangday/{{dataEdit.id}}" method="POST" class="col s12 card-panel form-input" id="form-add-phanconggiangday">
       <h5 class="form-title">Thông tin môn học</h5>
       <div class="row">
         <div class="input-field col m6 s12">
-          <select name="idmonhoc" id="select-gv">
+          <select name="idmonhoc" id="select-mh">
             <option value="" disabled>Chọn môn học</option>
             {% for subject in listSubject %}
             <option value="{{subject.id}}" {% if dataEdit.idmonhoc == subject.id %} selected {% endif %}>{{subject.name}} - {{subject.mamonhoc}}</option>
@@ -26,8 +26,8 @@
         <div class="input-field col m6 s12">
           <select name="idlop" id="select-lop">
             <option value="" disabled>Chọn lớp</option>
-            {% for lop in listClass %}
-            <option value="{{lop.id}}" {% if dataEdit.idlop == lop.id %} selected {% endif %}>{{lop.name}} - K{{lop.khoahoc}}</option>
+            {% for lop in listHocPhan %}
+            <option value="{{lop.id}}" {% if dataEdit.idlop == lop.id %} selected {% endif %}>{{lop.malophocphan}}</option>
             {% endfor %}
           </select>
           <label>Lớp</label>

@@ -10,15 +10,18 @@
     var $formAddLop = $('#form-add-lop')
     var $formAddMh = $('#form-add-mh')
     var $formAddPCGD = $('#form-add-phanconggiangday')
+    var $formAddLHP = $('#form-add-lhp')
     $formAddGv.on('submit', handleAddGv)
     $formAddLop.on('submit', handleAddLop)
     $formAddMh.on('submit', handleAddMh)
     $formAddPCGD.on('submit', handleAddPCGD)
+    $formAddLHP.on('submit', handleAddLHP)
+ 
     $('body').on('click', '.btn-delete-gv', handleDeleteGv)
     $('body').on('click', '.btn-delete-lop', handleDeleteLop)
     $('body').on('click', '.btn-delete-mh', handleDeleteMh)
     $('body').on('click', '.btn-delete-pcgd', handleDeletePCMH)
-
+    $('body').on('click', '.btn-delete-lhp', handleDeleteLHP)
     function handleAddGv (event) {
       event.preventDefault()
       var formData = $formAddGv.serializeArray()
@@ -62,8 +65,38 @@
           }, 1000)
         }
       })
-    }
+    } 
 
+    function handleAddLHP (event) {
+      event.preventDefault()
+      var formData = $formAddLHP.serializeArray()
+      if (!formData[0].value) {
+        return showToastr('Vui lòng chọn môn học', true)
+      }
+      if (!formData[1].value) {
+        return showToastr('Lớp học phần là bắt buộc', true)
+      }
+      if (!formData[2]) {
+        return showToastr('Vui lòng chọn học kỳ', true)
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: $formAddLHP.attr('action'),
+        data: $formAddLHP.serialize(),
+        success: function (response) {
+          if(response.success){
+            showToastr(response.message)
+            setTimeout(() => {
+              window.location.reload()
+            }, 1000)
+          }else{
+            showToastr(response.message,true)
+          }
+         
+        } 
+      })
+    } 
     function handleAddMh (event) {
       event.preventDefault()
       var formData = $formAddMh.serializeArray()
@@ -103,6 +136,41 @@
           setTimeout(() => {
             window.location.reload()
           }, 1000)
+        }
+      })
+    }
+     
+    function handleDeleteLHP (event) {
+      event.preventDefault()
+      window.Swal.fire({
+        title: 'Bạn có chắc không?',
+        text: 'Thông xin sẽ bị xoá vĩnh viễn!',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Huỷ',
+        confirmButtonText: 'Vâng, tiếp tục!'
+      }).then((result) => {
+        if (result.value) {
+          var currentBtn = $(event.currentTarget)
+          $.ajax({
+            type: 'DELETE',
+            url: currentBtn.attr('href'),
+            success: function (response) {
+              if (response.success) {
+                $(`#lophocphan-${response.data.id}`).remove()
+                window.Swal.fire(
+                  'Thành công!',
+                  'Xoá thông tin thành công.',
+                  'success'
+                )
+                setTimeout(() => {
+                  window.location.reload()
+                }, 2000)
+              }
+            }
+          })
         }
       })
     }
