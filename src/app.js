@@ -29,14 +29,6 @@ app.use(bodyParser.json());
 
 var sess; // global session, NOT recommended
 
-function checkSession() {
-  if (sess != undefined) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
 app.get("/", async (req, res) => {
   if (req.session.loggedin) {
     res.render("home/home.html");
@@ -234,8 +226,8 @@ app.get("/:type", async (req, res) => {
         listHocPhan[index].monhoc = monhoc[0];
         listHocPhan[index].kyhoc = kyhoc[0];
       }
-     // console.log('lophocphan');
-      
+      // console.log('lophocphan');
+
       res.render(template, {
         listSubject,
         listKyHoc,
@@ -252,7 +244,9 @@ app.get("/:type", async (req, res) => {
         listPhanCongGiangDay
       ] = await Promise.all([
         await knex("giangvien").select(),
-        await knex("lophocphan").select(),
+        await knex("lophocphan")
+          .where({ idmonhoc: listSubjectGiangDay.id })
+          .select(),
         await knex("monhoc").select(),
         await knex("phanconggiangday").select()
       ]);
@@ -262,10 +256,12 @@ app.get("/:type", async (req, res) => {
         });
         const lopHoc = _.filter(listClassGiangDay, {
           id: listPhanCongGiangDay[index].idlophocphan
-        }); 
-       
-        const monHoc = _.filter(listSubjectGiangDay, { id: lopHoc[0].idmonhoc });
-      
+        });
+
+        const monHoc = _.filter(listSubjectGiangDay, {
+          id: lopHoc[0].idmonhoc
+        });
+
         listPhanCongGiangDay[index].chiTietGv = giangVien[0];
         listPhanCongGiangDay[index].chiTietLopHoc = lopHoc[0];
         listPhanCongGiangDay[index].chiTietMonHoc = monHoc[0];
@@ -296,7 +292,7 @@ app.get("/:type", async (req, res) => {
           id: listPhanCongGiangDay[index].idgiangvien
         });
         const lopHoc = _.filter(listClassGiangDay, {
-          id: listPhanCongGiangDay[index].idlop
+          id: listPhanCongGiangDay[index].idhp
         });
         const monHoc = _.filter(listSubjectGiangDay, {
           id: listPhanCongGiangDay[index].idmonhoc
@@ -327,17 +323,22 @@ app.get("/:type", async (req, res) => {
   }
 });
 
-app.get("/tkb/sinhtkb", async (req, res) => {
+app.get("/tkb/sinhtkb/:ky", async (req, res) => {
+  const { ky } = req.params;
   let [
     listTeacherNew,
     listHPNew,
     listRoomNew,
-    listPhanCongGiangDayNew
+    listPhanCongGiangDayNew,
+    listMonhocNew
   ] = await Promise.all([
     await knex("giangvien").select(),
-    await knex("lophocphan").select(),
-    await knex("monhoc").select(),
-    await knex("phanconggiangday").select()
+    await knex("lophocphan")
+      .where({ idkyhoc: ky })
+      .select(),
+    await knex("giangduong").select(),
+    await knex("phanconggiangday").select(),
+    await knex("monhoc").select()
   ]);
 
   const danhSachThuHoc = [2, 3, 4, 5, 6];
@@ -345,102 +346,57 @@ app.get("/tkb/sinhtkb", async (req, res) => {
 
   // Tao mang A phan cong mon hoc: { idgiangvien: 2, idmonhoc: 2, idlop: 2, duocdaylop: 0 }
   const A = [];
-  listTeacherNew.map((giangvien)=> {
-    listHPNew.map((lophocphan)=> {
+  listTeacherNew.map(giangvien => {
+    listHPNew.map(lophocphan => {
       const filter = {
-        idlophocphan:lophocphan.id,
-        idgiangvien:giangvien.id,
+        idlophocphan: lophocphan.id,
+        idgiangvien: giangvien.id
       };
-      const phancong=_.filter(listPhanCongGiangDayNew, filter);
-      if(phancong.length){
-        A.push({...filter, cannotTeach:0});//duoc day lop nay
-      }
-      else {
-        A.push({...filter, cannotTeach:1});
+      const phancong = _.filter(listPhanCongGiangDayNew, filter);
+      if (phancong.length) {
+        A.push({ ...filter, cannotTeach: 0 }); // duoc day lop nay
+      } else {
+        A.push({ ...filter, cannotTeach: 1 });
       }
     });
   });
-  console.log({A});
-  
+
   const L = [];
   // Tao mang L thời gian có thể học của lớp: { idlop: 2,phong: 1, thu: 2, tiet: 1, duocdaytiet: 0 }
 
-  listHPNew.map((lophocphan) => {
-    listRoomNew.map((giangduong)=>{
-      danhSachThuHoc.map((thu)=>{
-        danhTietHocTrongNgay.map((tiet)=>{
-          L.push({idlophocphan:lophocphan.id, thu, tiet, idgiangduong:giangduong.id})
+  listHPNew.map(lophocphan => {
+    listRoomNew.map(giangduong => {
+      danhSachThuHoc.map(thu => {
+        danhTietHocTrongNgay.map(tiet => {
+          L.push({
+            idlophocphan: lophocphan.id,
+            thu,
+            tiet,
+            idgiangduong: giangduong.id,
+            cannotTeach: 0
+          });
         });
       });
     });
   });
-  console.log(L);
-  // for (let lop = 0; lop < listClassNew.length; lop++) {
-  //   for (let thuhoc = 0; thuhoc < danhSachThuHoc.length; thuhoc++) {
-  //     for (let tiethoc = 0; tiethoc < danhTietHocTrongNgay.length; tiethoc++) {
-  //       if (listClassNew[lop].buoihoc === "s") {
-  //         if (
-  //           danhTietHocTrongNgay[tiethoc] >= 1 &&
-  //           danhTietHocTrongNgay[tiethoc] <= 6
-  //         ) {
-  //           L.push({
-  //             idlop: listClassNew[lop].id,
-  //             thu: danhSachThuHoc[thuhoc],
-  //             tiet: danhTietHocTrongNgay[tiethoc],
-  //             buoihoc: "s",
-  //             duocdaytiet: 0 // 0 là được dạy tiết này
-  //           });
-  //         } else {
-  //           L.push({
-  //             idlop: listClassNew[lop].id,
-  //             thu: danhSachThuHoc[thuhoc],
-  //             tiet: danhTietHocTrongNgay[tiethoc],
-  //             buoihoc: "s",
-  //             duocdaytiet: 1 // 1 là không được dạy tiết này
-  //           });
-  //         }
-  //       } else {
-  //         if (
-  //           danhTietHocTrongNgay[tiethoc] >= 1 &&
-  //           danhTietHocTrongNgay[tiethoc] <= 6
-  //         ) {
-  //           L.push({
-  //             idlop: listClassNew[lop].id,
-  //             thu: danhSachThuHoc[thuhoc],
-  //             tiet: danhTietHocTrongNgay[tiethoc],
-  //             buoihoc: "c",
-  //             duocdaytiet: 1 // 1 là không được dạy tiết này
-  //           });
-  //         } else {
-  //           L.push({
-  //             idlop: listClassNew[lop].id,
-  //             thu: danhSachThuHoc[thuhoc],
-  //             tiet: danhTietHocTrongNgay[tiethoc],
-  //             buoihoc: "c",
-  //             duocdaytiet: 0 // 0 là được dạy tiết này
-  //           });
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
+  // console.log({L});
 
   // Tạo mảng X biểu diễn khả năng giảng viên P được dạy môn S lớp C thứ D tiết T phong r
   // A - { idgiangvien: 2, idmonhoc: 2, idlop: 2, duocdaylop: 1 } L - { idlop: 2, phong : 1, thu: 2, tiet: 1, duocdaytiet: 0 }
   const X = [];
-  A.map((phancong) => {
-  const listlop = _.filter(L, {idlophocphan: A.idlophocphan});
-  listlop.map((ll) => {
-    const x= {
-      ...phancong,
-      ...ll,
-      canTeach: 0,
-    };
-    delete x.cannotTeach;
-    X.push(x);
+  A.map(phancong => {
+    const listlop = _.filter(L, { idlophocphan: phancong.idlophocphan });
+    listlop.map(ll => {
+      const x = {
+        ...phancong,
+        ...ll,
+        canTeach: 0
+      };
+      delete x.cannotTeach;
+      X.push(x);
+    });
   });
-});
-console.log(X);
+
   // const X = [];
   // for (let index = 0; index < A.length; index++) {
   //   const listLop = _.filter(L, { idlop: A[index].idlop });
@@ -455,302 +411,218 @@ console.log(X);
 
   // For mảng A phân công giảng dạy : 0 được dạy - 1 không được dạy ({ idgiangvien: 2, idmonhoc: 2, idlop: 2, duocdaylop: 0 })
   let dem = 0;
-  //listTeacherNew = _.shuffle(listTeacherNew);
+  listTeacherNew = _.shuffle(listTeacherNew);
   //main process
-  var lastRoomAssigment={};
-  listTeacherNew.map((giangvien)=>{
-    const pcgdcuagiaovien=_.filter(A, {idgiangvien:giangvien.id, cannotTeach:0});
-    listHPNew.map((lophocphan)=>{
-      const pcdaylop =_.filter(pcgdcuagiaovien, {idlophocphan:lophocphan.id});
-      if (pcdaylop.length){
-        let soTinChiCuaMon=0;
-        let kt=true;
-        pcdaylop.map((L)=>{
-          soTinChiCuaMon=0;
-          for(const giangduong of listRoomNew){
-            if(!kt){
-              kt=true;//da xếp lịch thành công cho lớp học phần 
+  var lastRoomAssigment = {};
+
+  listTeacherNew.map(giangvien => {
+    const pcgdcuagiaovien = _.filter(A, {
+      idgiangvien: giangvien.id,
+      cannotTeach: 0
+    });
+
+    listHPNew.map(lophocphan => {
+      const pcdaylop = _.filter(pcgdcuagiaovien, {
+        idlophocphan: lophocphan.id
+      });
+      const monhoc = _.find(listMonhocNew, { id: lophocphan.idmonhoc });
+
+      if (pcdaylop.length) {
+        let soTinChiDaXepLich = 0;
+        let kt = true;
+
+        pcdaylop.map(pcday => {
+          soTinChiDaXepLich = 0;
+
+          for (const giangduong of listRoomNew) {
+            if (!kt) {
+              kt = true; //da xếp lịch thành công cho lớp học phần
               break;
             }
-             lastRoomAssigment=lastRoomAssigment[giangduong.id]||{thu:2, tiet:1};
-            if(
-              lastRoomAssigment.thu===6&&
-              12-lastRoomAssigment.tiet<lophocphan.sotinchi
-            ){
+
+            lastRoomAssigment = lastRoomAssigment[giangduong.id] || {
+              thu: 2,
+              tiet: 1
+            };
+
+            if (
+              lastRoomAssigment.thu === 6 &&
+              12 - lastRoomAssigment.tiet < monhoc.sotinchi
+            ) {
               continue;
             }
-            for(const thu of danhSachThuHoc ){
-              if(!kt){
+
+            for (const thu of danhSachThuHoc) {
+              if (!kt) {
                 break;
               }
+
               const soTietLopHocTrongNgay = _.filter(X, {
                 canTeach: 1,
-                idlophocphan: L.idlophocphan,
+                idlophocphan: pcday.idlophocphan,
                 thu,
-                idgiangduong: giangduong.id,
-              }); // tim het tat ca cac tiet lop hoc phan da hoc
-    
-              const soTietGVDayTrongNgay=_.filter(X,{
-                canTeach:1,
-                idlophocphan:L.idlophocphan,
-                thu,
-                idgiangduong:giangduong.id,
-                idgiangvien:giangvien.id
-              });// tim hết tất cả các tiest giảng viên đã dạy
-              const tietCuoiCungDay=soTietGVDayTrongNgay.length
-              ? soTietGVDayTrongNgay[soTietGVDayTrongNgay.length-1].tiet
-            :0; //tiết cuối cùng giảng viên dạy trong ngày
-            const tietCuoiCungHoc=soTietLopHocTrongNgay.length?soTietLopHocTrongNgay[soTietLopHocTrongNgay-1].tiet:0;
-            //tiết cuối cùng lớp học phần học trong ngày
-            const soTietConLaiTrongBuoiCuaGV = 12-tietCuoiCungDay; //số tiết giảng viên có thể dạy tiếp
-            const soTietConLaiLopHocTrongBuoi = 12-tietCuoiCungHoc;//số tiết lớp có thể học đc tiếp
-            let tietCuoiCung=0;
-            if(
-              12-soTietLopHocTrongNgay.length>=lophocphan.sotinchi&&
-              12-soTietLopHocTrongNgay.length>= lophocphan.sotinchi&&
-              soTietConLaiTrongBuoiCuaGV>lophocphan.sotinchi&&
-              soTietConLaiLopHocTrongBuoi>=lophocphan.sotinchi
-            ){
-              for (const tiet of danhTietHocTrongNgay){
-                if (soTinChiCuaMon>=lophocphan.sotinchi){
-                  kt=false;
-                  break;//da xếp lịch xong cho lớp học phần
-                }
-                //HC1
-                const gvCoTheDay =_.filter(X, {
-                  canTeach:1,
-                  thu,
-                  tiet,
-                  idgiangvien:giangduong.id,
-                  idgiangvien:giangvien.id,
-                });
-                if(gvCoTheDay.length){
-                  tietCuoiCung=gvCoTheDay[0].tiet;
+                idgiangduong: giangduong.id
+              }); // tim het tat ca cac tiet lop hoc phan da xếp lịch
 
-                }
-                else{
-                  const soTietConLaiSang=6-tietCuoiCung;
-                  if(tiet<=6&& soTietConLaiSang>lophocphan.sotinchi){
-                    continue;
+              const soTietGVDayTrongNgay = _.filter(X, {
+                canTeach: 1,
+                idlophocphan: pcday.idlophocphan,
+                thu,
+                idgiangvien: giangvien.id
+              }); // tim hết tất cả các tiest giảng viên đã dạy
+
+              const soTietGiangDuongTrongNgay = _.filter(X, {
+                canTeach: 1,
+                idlophocphan: pcday.idlophocphan,
+                thu,
+                idgiangduong: giangduong.id
+              });
+
+              const tietCuoiCungDay = soTietGVDayTrongNgay.length
+                ? soTietGVDayTrongNgay[soTietGVDayTrongNgay.length - 1].tiet
+                : 0; //tiết cuối cùng giảng viên dạy trong ngày
+              const tietCuoiCungHoc = soTietLopHocTrongNgay.length
+                ? soTietLopHocTrongNgay[soTietLopHocTrongNgay.length - 1].tiet
+                : 0;
+              const tietCuoiCungGiangDuong = soTietGiangDuongTrongNgay.length
+                ? soTietGiangDuongTrongNgay[
+                    soTietGiangDuongTrongNgay.length - 1
+                  ].tiet
+                : 0;
+              //tiết cuối cùng lớp học phần học trong ngày
+              const soTietConLaiTrongBuoiCuaGV = 12 - tietCuoiCungDay; //số tiết giảng viên có thể dạy tiếp
+              const soTietConLaiLopHocTrongBuoi = 12 - tietCuoiCungHoc; //số tiết lớp có thể học đc tiếp
+              const soTietConLaiGiangDuongTrongBuoi =
+                12 - tietCuoiCungGiangDuong; //số tiết lớp có thể học đc tiếp
+
+              if (
+                12 - soTietLopHocTrongNgay.length >= monhoc.sotinchi &&
+                12 - soTietLopHocTrongNgay.length >= monhoc.sotinchi &&
+                12 - soTietGiangDuongTrongNgay.length >= monhoc.sotinchi &&
+                soTietConLaiTrongBuoiCuaGV > monhoc.sotinchi &&
+                soTietConLaiGiangDuongTrongBuoi > monhoc.sotinchi &&
+                soTietConLaiLopHocTrongBuoi >= monhoc.sotinchi
+              ) {
+                for (const tiet of danhTietHocTrongNgay) {
+                  if (soTinChiDaXepLich >= monhoc.sotinchi) {
+                    kt = false;
+                    break; //da xếp lịch xong cho lớp học phần
                   }
-                  //HC2
-                  const lopCoTheDay=_.filter(X,{
-                    canTeach:1,
-                    idlophocphan:lophocphan.id,
+
+                  //HC1
+                  const gvCoTheDay = _.find(X, {
+                    canTeach: 1,
                     thu,
                     tiet,
-                    idgiangduong:giangduong.id,
-
+                    idgiangvien: giangvien.id
                   });
-                  if(!lopCoTheDay.length)
-                  {
-                    const tietCoTheDay=_.filter(L,{
-                      cannotTeach:0,
-                      idlophocphan:lophocphan.id,
-                      thu,
-                      tiet,
-                      idgiangduong:giangduong.id,
-                    });
-                    // xep lich
-                    const Xpsctd = _.filter(X, {
-                      canTeach: 0,
+
+                  if (!gvCoTheDay) {
+                    //HC2
+                    const lopCoTheDay = _.find(X, {
+                      canTeach: 1,
                       idlophocphan: lophocphan.id,
                       thu,
-                      tiet,
-                      idgiangduong:giangduong.id,
-                      idgiangvien:giangvien.id,
-                    }); // co phai la chua day khong?
-                    if(Xpsctd.lenght){
-                      //neu chua day
-                      const tietDau=Xpsctd[0];
-                      const indexOfXpsctd=_.filter(X,tietDau);
-                      X[indexOfXpsctd]={
-                        ...filter,
-                        canTeach:1,
-                      };
-                      dem+=1;
-                      soTinChiCuaMon+=1;
-                      lastRoomAssigment[giangduong.id]={thu,tiet};
-                      console.log('add to X',dem);
+                      tiet
+                    });
+
+                    const giangDuongCoTheDay = _.find(X, {
+                      canTeach: 1,
+                      idgiangduong: giangduong.id,
+                      thu,
+                      tiet
+                    });
+
+                    if (!lopCoTheDay && !giangDuongCoTheDay) {
+                      const tietCoTheDay = _.find(L, {
+                        cannotTeach: 0,
+                        idlophocphan: lophocphan.id,
+                        thu,
+                        tiet,
+                        idgiangduong: giangduong.id
+                      });
+
+                      if (tietCoTheDay) {
+                        if (
+                          tiet <= 6 &&
+                          7 - tiet < monhoc.sotinchi - soTinChiDaXepLich
+                        ) {
+                          continue;
+                        }
+
+                        // xep lich
+                        const Xpsctd = _.filter(X, {
+                          canTeach: 0,
+                          idlophocphan: lophocphan.id,
+                          thu,
+                          tiet,
+                          idgiangduong: giangduong.id,
+                          idgiangvien: giangvien.id
+                        }); // co phai la chua day khong?
+
+                        // console.log({X})
+                        if (Xpsctd.length) {
+                          //neu chua day
+                          const tietDau = Xpsctd[0];
+
+                          const indexOfXpsctd = _.indexOf(X, tietDau);
+                          // console.log({indexOfXpsctd})
+
+                          X[indexOfXpsctd] = {
+                            ...tietDau,
+                            canTeach: 1
+                          };
+                          dem += 1;
+                          soTinChiDaXepLich += 1;
+                          lastRoomAssigment[giangduong.id] = { thu, tiet };
+                          console.log("add to X", dem);
+                        }
+                      }
                     }
                   }
                 }
               }
             }
-
-          }
           }
         });
       }
-    })
-   });
-  // for (let indexGV = 0; indexGV < listTeacherNew.length; indexGV++) {
-  //   const phanCongGiangDayCuaGvHienTai = _.filter(A, {
-  //     idgiangvien: listTeacherNew[indexGV].id,
-  //     duocdaylop: 0
-  //   });
-  //   for (let indexLop = 0; indexLop < listClassNew.length; indexLop++) {
-  //     const dsMonHocCuaGvTaiLopHienTai = _.filter(
-  //       phanCongGiangDayCuaGvHienTai,
-  //       { idlop: listClassNew[indexLop].id }
-  //     );
-
-  //     if (dsMonHocCuaGvTaiLopHienTai.length) {
-  //       let soTinChiCuaMon = 0;
-  //       let KT = true;
-
-  //       for (
-  //         let indexMon = 0;
-  //         indexMon < dsMonHocCuaGvTaiLopHienTai.length;
-  //         indexMon++
-  //       ) {
-  //         const monHoc = dsMonHocCuaGvTaiLopHienTai[indexMon];
-  //         const thongTinMonHoc = _.filter(listSubjectNew, {
-  //           id: monHoc.idmonhoc
-  //         })[0];
-  //         soTinChiCuaMon = 0;
-
-  //         for (let indexThu = 0; indexThu < danhSachThuHoc.length; indexThu++) {
-  //           if (!KT) {
-  //             KT = true;
-  //             break;
-  //           }
-  //           const thuHoc = danhSachThuHoc[indexThu];
-
-  //           const filterSoTietLopDaHocTheoBuoi = _.filter(X, {
-  //             idlop: listClassNew[indexLop].id,
-  //             buoihoc: listClassNew[indexLop].buoihoc,
-  //             thu: thuHoc,
-  //             duocdayloptaitiet: 1
-  //           });
-
-  //           const filterSoTietGvDaDayTheoBuoi = _.filter(X, {
-  //             idgiangvien: listTeacherNew[indexGV].id,
-  //             buoihoc: listClassNew[indexLop].buoihoc,
-  //             thu: thuHoc,
-  //             duocdayloptaitiet: 1
-  //           });
-  //           const tietCuoiCungGiangVienDay = filterSoTietGvDaDayTheoBuoi.length
-  //             ? filterSoTietGvDaDayTheoBuoi[
-  //                 filterSoTietGvDaDayTheoBuoi.length - 1
-  //               ].tiet
-  //             : 0;
-  //           const soTietConLaiTrongBuoiCuaGiangVien =
-  //             listClassNew[indexLop].buoihoc === "s"
-  //               ? 6 - tietCuoiCungGiangVienDay
-  //               : 12 - tietCuoiCungGiangVienDay;
-  //           if (
-  //             6 - filterSoTietLopDaHocTheoBuoi.length >=
-  //               thongTinMonHoc.sotinchi &&
-  //             6 - filterSoTietGvDaDayTheoBuoi.length >=
-  //               thongTinMonHoc.sotinchi &&
-  //             soTietConLaiTrongBuoiCuaGiangVien >= thongTinMonHoc.sotinchi &&
-  //             6 -
-  //               (filterSoTietLopDaHocTheoBuoi.length
-  //                 ? filterSoTietLopDaHocTheoBuoi[
-  //                     filterSoTietLopDaHocTheoBuoi.length - 1
-  //                   ].tiet
-  //                 : 0) >=
-  //               thongTinMonHoc.sotinchi
-  //           ) {
-  //             for (
-  //               let indexTiet = 0;
-  //               indexTiet < danhTietHocTrongNgay.length;
-  //               indexTiet++
-  //             ) {
-  //               if (soTinChiCuaMon >= thongTinMonHoc.sotinchi) {
-  //                 KT = false;
-  //                 break;
-  //               }
-  //               const tietHoc = danhTietHocTrongNgay[indexTiet];
-
-  //               // HC1
-  //               const kiemTraXemGvDoTaiThuDoTietDoDaDayLopNaoChua = _.filter(
-  //                 X,
-  //                 {
-  //                   idgiangvien: listTeacherNew[indexGV].id,
-  //                   thu: thuHoc,
-  //                   tiet: tietHoc,
-  //                   duocdayloptaitiet: 1
-  //                 }
-  //               );
-  //               if (!kiemTraXemGvDoTaiThuDoTietDoDaDayLopNaoChua.length) {
-  //                 // HC2
-  //                 const kiemTraXemLopDoTaiThuDoTietDoDaHocMonNaoChua = _.filter(
-  //                   X,
-  //                   {
-  //                     idlop: listClassNew[indexLop].id,
-  //                     thu: thuHoc,
-  //                     tiet: tietHoc,
-  //                     duocdayloptaitiet: 1
-  //                   }
-  //                 );
-
-  //                 if (!kiemTraXemLopDoTaiThuDoTietDoDaHocMonNaoChua.length) {
-  //                   const kiemTraThuVaTietCoDuocHocKhong = _.filter(L, {
-  //                     idlop: listClassNew[indexLop].id,
-  //                     thu: thuHoc,
-  //                     tiet: tietHoc,
-  //                     duocdaytiet: 0
-  //                   });
-  //                   if (kiemTraThuVaTietCoDuocHocKhong.length) {
-  //                     const filterX = {
-  //                       idgiangvien: listTeacherNew[indexGV].id,
-  //                       idmonhoc: monHoc.idmonhoc,
-  //                       idlop: listClassNew[indexLop].id,
-  //                       thu: thuHoc,
-  //                       tiet: tietHoc,
-  //                       duocdayloptaitiet: 0
-  //                     };
-
-  //                     const Xpsctd = _.filter(X, filterX);
-
-  //                     if (Xpsctd.length) {
-  //                       const indexOfXpsctd = X.indexOf(Xpsctd[0]);
-  //                       X[indexOfXpsctd] = {
-  //                         ...Xpsctd[0],
-  //                         duocdayloptaitiet: 1
-  //                       };
-  //                       dem += 1;
-  //                       soTinChiCuaMon += 1;
-  //                       console.log("Da them vao X ", dem);
-  //                     }
-  //                   }
-  //                 }
-  //               }
-  //             }
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
+    });
+  });
 
   const XCuoiCung = _.filter(X, { canTeach: 1 });
-  console.log({XCuoiCung});
-  
-  // const listDone = await knex("xrandom").insert({
-  //   value: JSON.stringify(XCuoiCung)
-  // });
-  // console.log("================================================");
-  // console.log("Tkb Da themmmmmmmmm: =======: ", listDone);
-  // console.log("================================================");
-  // return res.redirect("/tkb/sinhtkb");
-});
+  //console.log({ XCuoiCung });
 
+  const listDone = await knex("xrandom").insert({
+    value: JSON.stringify(XCuoiCung)
+  });
+  console.log("================================================");
+  console.log("Tkb Da themmmmmmmmm: =======: ", listDone);
+  console.log("================================================");
+  // return res.redirect("/tkb/sinhtkb");
+  return "ok";
+});
 app.get("/tkb/giangvien", async (req, res) => {
   try {
     const { giangvien = 1, idtkb = 1 } = req.query;
-    const [listTeacherNew, listClassNew, listSubjectNew] = await Promise.all([
+    const [
+      listTeacherNew,
+      listGiangDuong,
+      listHocPhan,
+      listMonHoc,
+      listKyHoc
+    ] = await Promise.all([
       await knex("giangvien").select(),
-      await knex("lop").select(),
-      await knex("monhoc").select()
+      await knex("giangduong").select(),
+      await knex("lophocphan").select(),
+      await knex("monhoc").select(),
+      await knex("kyhoc").select()
     ]);
 
     const tkb = await knex("xlaitao")
       .select()
       .where("id", idtkb)
       .first();
+
     const tkbCuoi = JSON.parse(tkb.value);
     let danhsachDuocSapXep = _.sortBy(tkbCuoi, ["thu", "tiet"]);
     let tkbThemThongTin = [];
@@ -759,16 +631,21 @@ app.get("/tkb/giangvien", async (req, res) => {
       const thongtinGiangVien = _.filter(listTeacherNew, {
         id: thongtinhientai.idgiangvien
       })[0];
-      const thongtinLop = _.filter(listClassNew, {
-        id: thongtinhientai.idlop
+      const thongtinLop = _.filter(listHocPhan, {
+        id: thongtinhientai.idlophocphan
       })[0];
-      const thongtinMonHoc = _.filter(listSubjectNew, {
-        id: thongtinhientai.idmonhoc
+      const thongtinGiangDuong = _.filter(listGiangDuong, {
+        id: thongtinhientai.idgiangduong
       })[0];
+      const thongtinMonHoc = _.filter(listMonHoc, {
+        id: thongtinLop.idmonhoc
+      })[0];
+
       tkbThemThongTin.push({
         ...thongtinhientai,
         thongtinGiangVien,
         thongtinLop,
+        thongtinGiangDuong,
         thongtinMonHoc
       });
     }
@@ -778,6 +655,7 @@ app.get("/tkb/giangvien", async (req, res) => {
       tkbThemThongTin = _.filter(tkbThemThongTin, {
         idgiangvien: parseInt(giangvien)
       });
+
       thongTinGiangVien = _.filter(listTeacherNew, {
         id: parseInt(giangvien)
       })[0];
@@ -795,11 +673,14 @@ app.get("/tkb/giangvien", async (req, res) => {
         thuNam: filterTkbNew(tkbThu5),
         thuSau: filterTkbNew(tkbThu6)
       };
+      //console.log(JSON.stringify(danhSachTkb));
+
       return res.render("tkb/tkb.html", {
         danhSachTkb,
         listTeacherNew,
         giangvien: thongTinGiangVien,
-        idtkb
+        idtkb,
+        listKyHoc
       });
     }
   } catch (error) {
@@ -1173,11 +1054,11 @@ const taoTkbDotBien = async tkb => {
   console.log("Xoa thanh cong");
   console.log("================================================");
   // Them lich day moi vao thoi gian bat ki
-  const soTinChiCuaMon = _.filter(listSubjectNew, { id: randomPSC.idmonhoc })
+  const soTinChiDaXepLich = _.filter(listSubjectNew, { id: randomPSC.idmonhoc })
     .length;
   const buoiHocCuaLop = _.filter(listClassNew, { id: randomPSC.idlop })[0]
     .buoihoc;
-  for (let indexTinChi = 0; indexTinChi < soTinChiCuaMon; indexTinChi++) {
+  for (let indexTinChi = 0; indexTinChi < soTinChiDaXepLich; indexTinChi++) {
     const randomThuHoc = _.random(2, 6);
     const randomTietHoc =
       buoiHocCuaLop === "s" ? _.random(1, 6) : _.random(7, 12);
@@ -1377,12 +1258,11 @@ app.get("/edit/:type/:id", async (req, res) => {
     const listTeacher = await knex("giangvien").select();
     const listHocPhan = await knex("lophocphan").select();
     const listSubject = await knex("monhoc").select();
-    const listGiangDuong= await knex("giangduong").select();
-    const listKyHoc= await knex("kyhoc").select();   
-    console.log(type)
+    const listGiangDuong = await knex("giangduong").select();
+    const listKyHoc = await knex("kyhoc").select();
+    console.log(type);
     const template = `${type}/edit-${type}.html`;
-    
-    
+
     res.render(template, {
       dataEdit,
       listTeacher,
@@ -1413,9 +1293,9 @@ app.post("/edit/:type/:id", async (req, res, next) => {
       idgiangvien,
       idlop,
       mamonhoc,
-      toanha, 
-      tenphong, 
-      idkyhoc,
+      toanha,
+      tenphong,
+      idkyhoc
     } = req.body;
     if (!id) {
       throw new Error("Không tìm thấy thông tin");
@@ -1428,9 +1308,8 @@ app.post("/edit/:type/:id", async (req, res, next) => {
         if (!capbac) {
           throw new Error("Tên cấp bậc là bắt buộc");
         }
-        if(!hocvi)
-        {
-          throw new error("Tên học vị là bắt buộc")
+        if (!hocvi) {
+          throw new error("Tên học vị là bắt buộc");
         }
         await knex(type)
           .where({ id })
@@ -1478,20 +1357,18 @@ app.post("/edit/:type/:id", async (req, res, next) => {
           .where({ id })
           .update({ malophocphan, idmonhoc, idkyhoc });
 
-
-
         return res.redirect("/lophocphan");
-        case "giangduong":
-          if (!toanha) {
-            throw new Error("Tòa nhà là bắt buộc");
-          }
-          if (!tenphong) {
-            throw new Error("Tên phòng là bắt buộc");
-          }
-          await knex(type)
-            .where({ id })
-            .update({ toanha, tenphong });
-          return res.redirect("/giangduong");
+      case "giangduong":
+        if (!toanha) {
+          throw new Error("Tòa nhà là bắt buộc");
+        }
+        if (!tenphong) {
+          throw new Error("Tên phòng là bắt buộc");
+        }
+        await knex(type)
+          .where({ id })
+          .update({ toanha, tenphong });
+        return res.redirect("/giangduong");
       default:
         return res.redirect("/");
     }
@@ -1531,7 +1408,6 @@ app.post("/giangvien", async (req, res, next) => {
 });
 
 app.delete("/:type/:id", async (req, res, next) => {
-  
   try {
     const { type, id } = req.params;
     if (!id) {
@@ -1598,7 +1474,9 @@ app.post("/phanconggiangday", async (req, res, next) => {
   try {
     const { monhoc, giangvien, lophocphan } = req.body;
 
-      if (!monhoc) { throw new Error('Môn học là bắt buộc') }
+    if (!monhoc) {
+      throw new Error("Môn học là bắt buộc");
+    }
     if (!giangvien) {
       throw new Error("Giảng viên là bắt buộc");
     }
@@ -1715,32 +1593,35 @@ app.post("/lophocphan", async (req, res, next) => {
     const listHocPhan = await knex("lophocphan")
       .select()
       .where("malophocphan", maLopHocPhan);
- 
-      
+
     if (listHocPhan.length) {
-     return res.json({
-      success: false,
+      return res.json({
+        success: false,
         message: "Đã tồn tại"
       });
     }
-  const idRow = await knex("lophocphan").insert({ maLopHocPhan, idmonhoc:monhoc, idkyhoc:kyhoc });
-  const infoLopHP = await knex("lophocphan")
-    .select()
-    .where("id", idRow[0])
-    .first();
+    const idRow = await knex("lophocphan").insert({
+      maLopHocPhan,
+      idmonhoc: monhoc,
+      idkyhoc: kyhoc
+    });
+    const infoLopHP = await knex("lophocphan")
+      .select()
+      .where("id", idRow[0])
+      .first();
 
-  res.json({
-    success: true,
-    message: "Thêm lớp thành công",
-    data: infoLopHP
-  });
-} catch (error) {
-  res.json({
-    success: false,
-    message: error.message,
-    data: error
-  });
-}
+    res.json({
+      success: true,
+      message: "Thêm lớp thành công",
+      data: infoLopHP
+    });
+  } catch (error) {
+    res.json({
+      success: false,
+      message: error.message,
+      data: error
+    });
+  }
 });
 app.post("/giangduong", async (req, res, next) => {
   try {

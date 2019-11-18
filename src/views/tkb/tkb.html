@@ -3,9 +3,21 @@
 {% block homeContent %}
 <div class="row">
   <div class="col s12" id="info-tkb" data-idtkb="{{idtkb}}">
+ 
     <form action="" method="POST" class="col s12 card-panel form-input" >
+        <h5 class="form-title">Thông tin lớp học phần</h5> 
       <div class="row">
-        <div class="input-field col s12">
+        <div class="input-field col m6 s12">
+          <select name="kyhoc" id="select-kh-tkb">
+            <option value="">Kỳ học</option>
+            {% for kh in listKyHoc %}
+            <option value={{kh.id}} {% if kh.id == kyhoc.id %}selected{% endif %}>{{kh.name}}
+            </option>
+            {% endfor %}
+          </select>
+          <label>Chọn kỳ học</label>
+        </div>
+        <div class="input-field col m6 s12">
           <select name="giangvien" id="select-gv-tkb">
             <option value="">Tất cả giảng viên</option>
             {% for teacher in listTeacherNew %}
@@ -15,14 +27,18 @@
           </select>
           <label>Giảng viên</label>
         </div>
+        <button class="btn waves-effect waves-light center btn-submit light-blue " type="submit">TÌm kiếm
+            <i class="material-icons right">send</i>
+        </button>
       </div>
+
     </form>
     {% if giangvien %}
     <h5 class="center-align">Lịch giảng dạy của giảng viên: <span class="light-blue-text">{{ giangvien.name }}</span>
     </h5>
     {% endif %}
-  <div class="table table-responsive" >
-    <table class="centered striped">
+  <div class="responsive-table" >
+    <table class="centered striped highlight">
       <thead class="table-head ">
         <tr>
           <th style="width: 100px;"></th>
@@ -46,8 +62,9 @@
           {% for thuHai in danhSachTkb.thuHai %}
           <td>
             {% for monHocTheoTiet in thuHai %}
-            <div>{{monHocTheoTiet.thongtinMonHoc.name}} </br>
-              K{{monHocTheoTiet.thongtinLop.khoahoc}}{{monHocTheoTiet.thongtinLop.name}}</div>
+            <div>{{monHocTheoTiet.thongtinLop.malophocphan}} {{monHocTheoTiet.thongtinMonHoc.name}}   </br>
+              -({{monHocTheoTiet.thongtinGiangDuong.toanha }}{{monHocTheoTiet.thongtinGiangDuong.tenphong}})
+            </div>
             {% endfor %}
           </td>
           {% endfor %}
@@ -57,9 +74,10 @@
           {% for thuBa in danhSachTkb.thuBa %}
           <td>
             {% for monHocTheoTiet in thuBa %}
-
-            <div>{{monHocTheoTiet.thongtinMonHoc.name}} </br>
-              K{{monHocTheoTiet.thongtinLop.khoahoc}}{{monHocTheoTiet.thongtinLop.name}}</div> {% endfor %}
+            <div>{{monHocTheoTiet.thongtinLop.malophocphan}} {{monHocTheoTiet.thongtinMonHoc.name}}   </br>
+              -({{monHocTheoTiet.thongtinGiangDuong.toanha }}{{monHocTheoTiet.thongtinGiangDuong.tenphong}})
+            </div>
+            {% endfor %}
           </td>
           {% endfor %}
         </tr>
@@ -67,10 +85,11 @@
           <td>Thứ 4</td>
           {% for thuTu in danhSachTkb.thuTu %}
           <td>
-            {% for monHocTheoTiet in thuTu %}
-
-            <div>{{monHocTheoTiet.thongtinMonHoc.name}} </br>
-              K{{monHocTheoTiet.thongtinLop.khoahoc}}{{monHocTheoTiet.thongtinLop.name}}</div> {% endfor %}
+            {% for monHocTheoTiet in thuTu %} 
+            <div>{{monHocTheoTiet.thongtinLop.malophocphan}} {{monHocTheoTiet.thongtinMonHoc.name}}   </br>
+              -({{monHocTheoTiet.thongtinGiangDuong.toanha }}{{monHocTheoTiet.thongtinGiangDuong.tenphong}})
+            </div>
+             {% endfor %}
           </td>
           {% endfor %}
         </tr>
@@ -79,8 +98,9 @@
           {% for thuNam in danhSachTkb.thuNam %}
           <td>
             {% for monHocTheoTiet in thuNam %}
-            <div>{{monHocTheoTiet.thongtinMonHoc.name}} </br>
-              K{{monHocTheoTiet.thongtinLop.khoahoc}}{{monHocTheoTiet.thongtinLop.name}}</div>
+            <div>{{monHocTheoTiet.thongtinLop.malophocphan}} {{monHocTheoTiet.thongtinMonHoc.name}}   </br>
+              -({{monHocTheoTiet.thongtinGiangDuong.toanha }}{{monHocTheoTiet.thongtinGiangDuong.tenphong}})
+            </div>
             {% endfor %}
           </td>
           {% endfor %}
@@ -90,8 +110,9 @@
           {% for thuSau in danhSachTkb.thuSau %}
           <td>
             {% for monHocTheoTiet in thuSau %}
-            <div>{{monHocTheoTiet.thongtinMonHoc.name}} </br>
-              K{{monHocTheoTiet.thongtinLop.khoahoc}}{{monHocTheoTiet.thongtinLop.name}}</div>
+            <div>{{monHocTheoTiet.thongtinLop.malophocphan}} {{monHocTheoTiet.thongtinMonHoc.name}}   </br>
+              -({{monHocTheoTiet.thongtinGiangDuong.toanha }}{{monHocTheoTiet.thongtinGiangDuong.tenphong}})
+            </div>
             {% endfor %}
           </td>
           {% endfor %}

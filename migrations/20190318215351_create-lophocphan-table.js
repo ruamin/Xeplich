@@ -1,13 +1,22 @@
-exports.up = function (knex, Promise) {
-  return knex.schema.createTable('lophocphan', function (table) {
-    table.increments('id').primary()
-    table.string('malophocphan')
-    table.integer('idmonhoc').unsigned().references('id').inTable('monhoc')
-    table.integer('idkyhoc').unsigned().references('id').inTable('kyhoc')
-    table.timestamp('created_at').defaultTo(knex.fn.now())
-  })
-}
+exports.up = function(knex, Promise) {
+  return knex.schema.createTable("lophocphan", function(table) {
+    table.increments("id").primary();
+    table.string("malophocphan");
+    table.integer("sosinhiven");
+    table
+      .integer("idmonhoc")
+      .unsigned()
+      .references("id")
+      .inTable("monhoc");
+    table
+      .integer("idkyhoc")
+      .unsigned()
+      .references("id")
+      .inTable("kyhoc");
+    table.timestamp("created_at").defaultTo(knex.fn.now());
+  });
+};
 
-exports.down = function (knex, Promise) {
-  return knex.schema.dropTable('lophocphan')
-}
+exports.down = function(knex, Promise) {
+  return knex.schema.dropTable("lophocphan");
+};
