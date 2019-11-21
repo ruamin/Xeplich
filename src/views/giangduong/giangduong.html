@@ -1,0 +1,74 @@
+{% extends "home/home.html" %} {% block homeContent %}
+<div class="row gd-container">
+  <form
+    action="/giangduong"
+    method="POST"
+    class="col s12 card-panel form-input"
+    id="form-add-gd"
+    data-number="{{numberOfSuject}}"
+  >
+    <h5 class="form-title">Thông tin giảng đường</h5>
+    <div class="row">
+      <div class="input-field col m6 s12">
+        <input id="toanha" type="text" class="validate" name="toanha" />
+        <label for="toanha">Tên tòa nhà</label>
+      </div>
+      <div class="input-field col m6 s12">
+        <input id="tenphong" type="text" class="validate" name="tenphong" />
+        <label for="tenphong">Tên phòng học</label>
+      </div>
+      <div class="input-field col m6 s12">
+        <input id="sochongoi" type="text" class="validate" name="sochongoi" />
+        <label for="sochongoi">Số chỗ ngồi</label>
+      </div>
+    </div>
+    <button
+      class="btn waves-effect waves-light center btn-submit light-blue "
+      type="submit"
+    >
+      Thêm Giảng Đường
+      <i class="material-icons right">send</i>
+    </button>
+  </form>
+  <div class="divider"></div>
+  <div class="row">
+    <div class="col s12">
+      <table class="centered striped">
+        <thead class="table-head ">
+          <tr>
+            <th>STT</th>
+            <th>Tên tòa nhà</th>
+            <th>Tên phòng học</th>
+            <th>Số chỗ ngồi</th>
+            <th>Hành động</th>
+          </tr>
+        </thead>
+        <tbody class="gd-table-body">
+          {% for giangduong in listGiangDuong %}
+          <tr id="gd-{{giangduong.id}}">
+            <td>{{ loop.index }}</td>
+            <td>{{ giangduong.toanha }}</td>
+            <td>{{ giangduong.tenphong }}</td>
+            <td>{{giangduong.sochongoi}}</td>
+            <td>
+              <a
+                href="/edit/giangduong/{{ giangduong.id }}"
+                class="waves-effect waves-light btn btn-small"
+              >
+                <i class="material-icons">edit</i>
+              </a>
+              <a
+                href="/giangduong/{{ giangduong.id }}"
+                class="waves-effect waves-light btn btn-small red lighten-2 btn-delete-gd"
+              >
+                <i class="material-icons">delete</i>
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

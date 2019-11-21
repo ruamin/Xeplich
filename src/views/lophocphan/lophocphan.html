@@ -1,0 +1,97 @@
+{% extends "home/home.html" %} {% block homeContent %}
+<div class="row lop-container">
+  <form
+    action="/lophocphan"
+    method="POST"
+    class="col s12 card-panel form-input"
+    id="form-add-lhp"
+    data-number="{{numberOfClass}}"
+  >
+    <h5 class="form-title">Thông tin lớp học phần</h5>
+    <div class="row">
+      <div class="input-field col m6 s12">
+        <select name="monhoc">
+          <option value="" disabled selected>Chọn môn học</option>
+          {% for subject in listSubject %}
+          <option value="{{subject.id}}"
+            >{{subject.name}} - {{subject.mamonhoc}}</option
+          >
+          {% endfor %}
+        </select>
+        <label>Môn học</label>
+      </div>
+      <div class="input-field col m6 s12">
+        <input
+          id="maLopHocPhan"
+          type="text"
+          class="validate"
+          name="maLopHocPhan"
+        />
+        <label for="malophocphan">Lớp Học Phần</label>
+      </div>
+      <div class="input-field col m6 s12">
+        <select name="kyhoc">
+          <option value="" disabled selected>Chọn kỳ học</option>
+          {% for kyhoc in listKyHoc %}
+          <option value="{{kyhoc.id}}">{{kyhoc.name}}</option>
+          {% endfor %}
+        </select>
+        <label>Kỳ học</label>
+      </div>
+      <div class="input-field col m6 s12">
+        <input id="sosinhvien" type="text" class="validate" name="sosinhvien" />
+        <label for="sosinhvien">Số sinh viên</label>
+      </div>
+    </div>
+    <button
+      class="btn waves-effect waves-light center btn-submit light-blue"
+      type="submit"
+    >
+      Thêm Lớp
+      <i class="material-icons right">send</i>
+    </button>
+  </form>
+  <div class="divider"></div>
+  <div class="row">
+    <div class="col s12">
+      <table class="centered striped">
+        <thead class="table-head ">
+          <tr>
+            <th>STT</th>
+            <th>Lớp học phần</th>
+            <th>Tên môn học</th>
+            <th>Kỳ học</th>
+            <th>Số sinh viên</th>
+            <th>Hành động</th>
+          </tr>
+        </thead>
+        <tbody class="hp-table-body">
+          {% for hp in listHocPhan %}
+          <tr id="lophocphan-{{hp.id}}">
+            <td>{{ loop.index }}</td>
+            <td>{{ hp.malophocphan }}</td>
+            <td>{{ hp.monhoc.name }}- {{hp.monhoc.mamonhoc}}</td>
+            <td>{{ hp.kyhoc.name }}</td>
+            <td>{{hp.sosinhvien}}</td>
+            <td>
+              <a
+                href="/edit/lophocphan/{{ hp.id }}"
+                class="waves-effect waves-light btn btn-small"
+              >
+                <i class="material-icons">edit</i>
+              </a>
+              <a
+                href="/lophocphan/{{ hp.id }}"
+                class="waves-effect waves-light btn btn-small red lighten-2 btn-delete-lhp"
+              >
+                <i class="material-icons">delete</i>
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

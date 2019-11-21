@@ -7,12 +7,16 @@
       <h5 class="form-title">Thông tin giảng viên</h5>
       <div class="row">
         <div class="input-field col m6 s12">
-          <input id="first_name" type="text" class="validate" name="name">
-          <label for="first_name">Họ Và Tên</label>
+              <input id="first_name" type="text" class="validate" name="name">
+              <label for="first_name">Họ Và Tên</label>
+            </div>
+        <div class="input-field col m6 s12">
+          <input id="capbac" type="text" class="validate" name="capbac">
+          <label for="capbac">Cấp bậc</label>
         </div>
         <div class="input-field col m6 s12">
-          <input id="note" type="text" class="validate" name="note">
-          <label for="note">Ghi chú</label>
+          <input id="hocvi" type="text" class="validate" name="hocvi">
+          <label for="hocvi">Học vị</label>
         </div>
       </div>
       <button class="btn waves-effect waves-light center btn-submit light-blue btn-form-gv " type="submit">Thêm Giảng
@@ -28,8 +32,8 @@
             <tr>
               <th>STT</th>  
               <th>Giảng Viên</th>
-              <th>Mã giảng viên</th>
-              <th>Ghi Chú</th>
+              <th>Cấp bậc</th>
+              <th>Học vị</th>
               <th> Hành Động</th>
             </tr>
           </thead>
@@ -38,8 +42,8 @@
             <tr  id="giangvien-{{teacher.id}}">
               <td>{{ loop.index }}</td>
               <td>{{ teacher.name }}</td>
-              <td>{{ teacher.id }}</td>
-              <td>{{ teacher.note }}</td>
+              <td>{{ teacher.capbac }}</td>
+              <td>{{ teacher.hocvi }}</td>
               <td>
                 <a href="/edit/giangvien/{{ teacher.id }}" class="waves-effect waves-light btn btn-small">
                   <i class="material-icons">edit</i>

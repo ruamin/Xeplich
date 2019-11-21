@@ -1,23 +1,33 @@
-{% extends "layout/layout.html" %}
-
-{% block content %}
+{% extends "layout/layout.html" %} {% block content %}
 <div class="row content-container">
   <div class="col m2 nav-left hide-on-med-and-down">
     <ul class="">
       <a href="/giangvien" class="nav-left-row" id="btn-gv">Giảng Viên</a>
       <a href="/monhoc" class="nav-left-row" id="btn-mh">Môn Học</a>
-      <a href="/lop" class="nav-left-row" id="btn-lop">Lớp</a>
-      <a href="/lophocphan" class="nav-left-row" id="btn-lophocphan">Lớp hoc phan</a>
-      <a href="/phanconggiangday" class="nav-left-row" id="btn-lop">Phân công giảng dạy</a>
-      <a href="/tkb/giangvien" class="nav-left-row" id="btn-lop">TKB Giảng Viên</a>
-      <a href="/tkb/lop" class="nav-left-row" id="btn-lop">TKB Lớp</a>
+      <a href="/giangduong" class="nav-left-row" id="btn-giangduong"
+        >Giảng Đường</a
+      >
+      <a href="/lophocphan" class="nav-left-row" id="btn-lophocphan"
+        >Lớp Học Phần</a
+      >
+      <a href="/phanconggiangday" class="nav-left-row" id="btn-pcgd"
+        >Phân Công Giảng Dạy</a
+      >
+      <a href="/tkb/giangvien" class="nav-left-row" id="btn-gv"
+        >TKB Giảng Viên</a
+      >
+      <a href="/tkb/khoa" class="nav-left-row" id="btn-khoa">TKB Khoa</a>
     </ul>
   </div>
 
   <div class="col m10 s12" style="text-align: center;">
     {% block homeContent %}
-      <h4>Học viện kỹ thuật quân sự - Khoa Công Nghệ Thông Tin</h4>
-      <img class="responsive-img" src="/images/images.png" style="height: 500px;">
+    <h4>Học viện kỹ thuật quân sự - Khoa Công Nghệ Thông Tin</h4>
+    <img
+      class="responsive-img"
+      src="/images/images.png"
+      style="height: 500px;"
+    />
     {% endblock %}
   </div>
 </div>
