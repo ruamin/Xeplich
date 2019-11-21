@@ -1,0 +1,48 @@
+{% extends "home/home.html" %} {% block homeContent %}
+<style>
+.centered{
+  text-align: center;
+}
+</style>
+<div class="row">
+  <div class="col s12" id="info-tkb" data-idtkb="{{idkhoa}}">
+    <h5 class="center-align">Thời khóa biểu của khoa</h5>
+    <h6 class="center-align">Kỳ 1 năm học 2019-2020</h5>
+    <table class="centered striped">
+      <thead class="table-head centered">
+        <tr>
+          <td  class="centered">STT</td>
+          <td  class="centered">Mã Môn học</td>
+          <td  class="centered">Học phần</td>
+          <td  class="centered">Số Tín Chỉ</td>
+          <td  class="centered">Mã LHP</td>
+          <td  class="centered">Giảng Viên</td>
+          <td  class="centered">Dung lượng</td>
+          <td  class="centered">Thứ</td>
+          <td  class="centered">Tiết</td>
+          <td  class="centered">Giảng đường</td>
+        </tr>
+      </thead>
+      <tbody class="lop-table-body">
+        {% for tkb in resultList %}
+        <tr>
+          <td>{{tkb.stt}}</td>
+          <td>{{tkb.thongtinMonHoc.mamonhoc}}</td>
+          <td>{{tkb.thongtinMonHoc.name}}</td>
+          <td>{{tkb.thongtinMonHoc.sotinchi}}</td>
+          <td>{{tkb.thongtinLop.malophocphan}}</td>
+          <td>{{tkb.thongtinGiangVien.name}}</td>
+          <td>{{tkb.thongtinLop.sosinhvien}}</td>
+          <td>{{tkb.thu}}</td>
+          <td>{{tkb.tiet}}</td>
+          <td>{{tkb.thongtinGiangDuong.toanha}} - {{tkb.thongtinGiangDuong.tenphong}}</td> 
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %} 
+{% block script %}
+<script src="/js/tkb-khoa.js"></script>
+{% endblock %}

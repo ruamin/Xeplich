@@ -1,20 +1,49 @@
-  {% extends "layout/layout.html" %}
-{% block content %}
+{% extends "layout/layout.html" %} {% block content %}
 <div class="row">
   <div class="col m8 offset-m2 s12">
-    <form action="/edit/giangduong/{{dataEdit.id}}" method="POST" class="col s12 card-panel form-input">
-      <h5 class="form-title">Thông tin giảng đường </h5>
+    <form
+      action="/edit/giangduong/{{dataEdit.id}}"
+      method="POST"
+      class="col s12 card-panel form-input"
+    >
+      <h5 class="form-title">Thông tin giảng đường</h5>
       <div class="row">
         <div class="input-field col m6 s12">
-            <input id="toanha" type="text" class="validate" name="toanha" value="{{dataEdit.toanha}}">
-            <label for="toanha" >Tên tòa nhà</label>
-          </div>
-          <div class="input-field col m6 s12">
-            <input id="tenphong"type="text" class="validate" name="tenphong" value="{{dataEdit.tenphong}}">
-            <label for="tenphong">Tên phòng học</label>
-          </div>
+          <input
+            id="toanha"
+            type="text"
+            class="validate"
+            name="toanha"
+            value="{{dataEdit.toanha}}"
+          />
+          <label for="toanha">Tên tòa nhà</label>
+        </div>
+        <div class="input-field col m6 s12">
+          <input
+            id="tenphong"
+            type="text"
+            class="validate"
+            name="tenphong"
+            value="{{dataEdit.tenphong}}"
+          />
+          <label for="tenphong">Tên phòng học</label>
+        </div>
+        <div class="input-field col m6 s12">
+          <input
+            id="sochongoi"
+            type="text"
+            class="validate"
+            name="sochongoi"
+            value="{{dataEdit.sochongoi}}"
+          />
+          <label for="sochongoi">Số chỗ ngồi</label>
+        </div>
       </div>
-      <button class="btn waves-effect waves-light center btn-submit light-blue " type="submit">Cập nhật thông tin giảng đường
+      <button
+        class="btn waves-effect waves-light center btn-submit light-blue "
+        type="submit"
+      >
+        Cập nhật thông tin giảng đường
         <i class="material-icons right">send</i>
       </button>
     </form>

@@ -2,7 +2,7 @@ exports.up = function(knex, Promise) {
   return knex.schema.createTable("lophocphan", function(table) {
     table.increments("id").primary();
     table.string("malophocphan");
-    table.integer("sosinhiven");
+    table.integer("sosinhvien");
     table
       .integer("idmonhoc")
       .unsigned()
