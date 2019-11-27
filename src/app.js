@@ -72,21 +72,20 @@ function giangBuocHC1(tkb, idgiangvien, idlophocphan, thu, tiet) {
   }
   return true;
 }
-//  Không lớp nào phải học 2 môn trong cùng 1 thời gian
-function giangBuocHC2(tkb, idlophocphan, thu, tiet) {
-  const result = _.filter(tkb, { idlophocphan, thu, tiet });
-  if (result.length >= 2) {
-    console.log("Loi giang buoc 2");
-    return false;
-  }
-  return true;
-}
+// //  Không lớp nào phải học 2 môn trong cùng 1 thời gian
+// function giangBuocHC2(tkb, idlophocphan, thu, tiet) {
+//   const result = _.filter(tkb, { idlophocphan, thu, tiet });
+//   if (result.length >= 2) {
+//     console.log("Loi giang buoc 2");
+//     return false;
+//   }
+//   return true;
+// }
 // Giảng viên phải dạy đúng lớp và đúng môn học được giao
 function giangBuocHC3(
   tkb,
   A,
   idgiangvien,
-  idmonhoc,
   idlophocphan,
   idgiangduong,
   thu,
@@ -94,7 +93,6 @@ function giangBuocHC3(
 ) {
   const resultTkb = _.filter(tkb, {
     idgiangvien,
-    idmonhoc,
     idlophocphan,
     idgiangduong,
     thu,
@@ -102,22 +100,21 @@ function giangBuocHC3(
   });
   const lopPhanCong = _.filter(A, {
     idgiangvien,
-    idmonhoc,
     idlophocphan,
     idgiangduong,
-    duocdaylop: 0
+    cannotTeach: 0
   }); // dc day
-  if (lopPhanCong[0].duocdaylop * resultTkb[0].duocdayloptaitiet === 0) {
+  if (lopPhanCong[0].canTeach * resultTkb[0].canTeach === 0) {
     return true;
   }
   return false;
 }
 // Mỗi giảng viên dạy 1 môn nào đó phải đủ số lớp theo phân công
-function giangBuocHC4(tkb, monhoc, A, idgiangvien, idmonhoc) {
-  const resultTkb = _.filter(tkb, { idgiangvien, idmonhoc });
-  const filterMon = _.filter(monhoc, { id: idmonhoc })[0];
-  const resultA = _.filter(A, { idgiangvien, idmonhoc, duocdaylop: 0 });
-  if (resultTkb.length / filterMon.sotinchi === resultA.length) {
+function giangBuocHC4(tkb, monhoc, A, idgiangvien, idlophocphan) {
+  const resultTkb = _.filter(tkb, { idgiangvien, idlophocphan });
+  const filterLHP = _.filter(lophocphan, { id: idlophocphan })[0];
+  const resultA = _.filter(A, { idgiangvien, idlophocphan, canTeach: 0 });
+  if (resultTkb.length / filterLHP.sotinchi === resultA.length) {
     return true;
   }
   console.log("Loi giang buoc 4");
@@ -147,7 +144,6 @@ function giangBuocHC6(
   tkb,
   A,
   idgiangvien,
-  idmonhoc,
   idlophocphan,
   idgiangduong,
   thu,
@@ -156,7 +152,6 @@ function giangBuocHC6(
 ) {
   const resultTkbGvDayMonTaiThuTiet = _.filter(tkb, {
     idgiangvien,
-    idmonhoc,
     idlophocphan,
     idgiangduong,
     thu,
@@ -164,23 +159,22 @@ function giangBuocHC6(
   });
   const lopPhanCongCuaDv = _.filter(A, {
     idgiangvien,
-    idmonhoc,
     idlophocphan,
-    duocdaylop: 0
+    cannotTeach: 0
   });
-  const filterMonHoc = _.filter(monhoc, { id: idmonhoc })[0];
+  const filterLHP = _.filter(lophocphan, { id: idlophocphan })[0];
   if (
-    lopPhanCongCuaDv[0].duocdaylop *
-      resultTkbGvDayMonTaiThuTiet[0].duocdayloptaitiet ===
+    lopPhanCongCuaDv[0].cannotTeach *
+      resultTkbGvDayMonTaiThuTiet[0].canTeach ===
       0 ||
-    filterMonHoc.length
+    filterLHP.length
   ) {
     return true;
   }
   return false;
 }
-function giangBuocMem(tkb, monhoc, A, idgiangvien, idmonhoc) {
-  const resultTkbGvMon = _.filter(tkb, { idgiangvien, idmonhoc });
+function giangBuocMem(tkb, lophocphan, A, idgiangvien, idlophocphan) {
+  const resultTkbGvLHP = _.filter(tkb, { idgiangvien, idlophocphan });
   const filterMonGBM = _.filter(monhoc, { id: idmonhoc });
   const resultAGBM = _.filter(A, { idgiangvien, idmonhoc, duocdaylop: 0 });
   if (resultTkbGvMon.length / filterMonGBM[0].sotinchi === resultAGBM.length) {
