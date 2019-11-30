@@ -100,7 +100,7 @@
         return showToastr("Lớp học phần là bắt buộc", true);
       }
       if (!formData[2]) {
-        return showToastr("Vui lòng chọn học kỳ", true);
+        return showToastr("Vui lòng chọn số sinh viên", true);
       }
 
       $.ajax({
@@ -155,10 +155,12 @@
       if (!formData[1]) {
         return showToastr("Vui lòng chọn giảng viên", true);
       }
-      if (!formData[1]) {
+      if (!formData[2]) {
         return showToastr("Vui lòng chọn lớp", true);
       }
-
+      if (!formData[3]) {
+        return showToastr("Vui lòng chọn kỳ", true);
+      }
       $.ajax({
         type: "POST",
         url: $formAddPCGD.attr("action"),

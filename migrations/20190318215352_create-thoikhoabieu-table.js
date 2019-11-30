@@ -1,5 +1,5 @@
 exports.up = function(knex, Promise) {
-  return knex.schema.createTable("phanconggiangday", function(table) {
+  return knex.schema.createTable("thoikhoabieu", function(table) {
     table.increments();
     table
       .integer("idlophocphan")
@@ -11,12 +11,19 @@ exports.up = function(knex, Promise) {
       .unsigned()
       .references("id")
       .inTable("giangvien");
-    table.timestamp("created_at").defaultTo(knex.fn.now());
     table
       .integer("idkyhoc")
       .unsigned()
       .references("id")
       .inTable("kyhoc");
+    table
+      .integer("idgiangduong")
+      .unsigned()
+      .references("id")
+      .inTable("giangduong");
+    table.integer("thu").unsigned();
+    table.integer("tiet").unsigned();
+    table.timestamp("created_at").defaultTo(knex.fn.now());
   });
 };
 

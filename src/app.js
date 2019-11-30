@@ -28,8 +28,6 @@ app.set("view engine", "html");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-var sess; // global session, NOT recommended
-
 app.get("/", async (req, res) => {
   if (req.session.loggedin) {
     res.render("home/home.html");
@@ -64,23 +62,20 @@ function demNgayDayY(tkb, idgiangvien, thu) {
 }
 
 // Không giảng viên nào dạy 2 lớp trong cùng thời gian
-function giangBuocHC1(tkb, idgiangvien, idlophocphan, thu, tiet) {
-  const result = _.filter(tkb, { idgiangvien, idlophocphan, thu, tiet });
+function giangBuocHC1(tkb, idgiangvien, idlophocphan, thu, tiet, idgiangduong) {
+  const result = _.filter(tkb, {
+    idgiangvien,
+    idlophocphan,
+    thu,
+    tiet,
+    idgiangduong
+  });
   if (result.length >= 2) {
     console.log("Loi giang buoc 1");
     return false;
   }
   return true;
 }
-// //  Không lớp nào phải học 2 môn trong cùng 1 thời gian
-// function giangBuocHC2(tkb, idlophocphan, thu, tiet) {
-//   const result = _.filter(tkb, { idlophocphan, thu, tiet });
-//   if (result.length >= 2) {
-//     console.log("Loi giang buoc 2");
-//     return false;
-//   }
-//   return true;
-// }
 // Giảng viên phải dạy đúng lớp và đúng môn học được giao
 function giangBuocHC3(
   tkb,
@@ -271,11 +266,13 @@ app.get("/:type", async (req, res) => {
         listTeacherGiangDay,
         listClassGiangDay,
         listSubjectGiangDay,
+        listKyHoc,
         listPhanCongGiangDay
       ] = await Promise.all([
         await knex("giangvien").select(),
         await knex("lophocphan").select(),
         await knex("monhoc").select(),
+        await knex("kyhoc").select(),
         await knex("phanconggiangday").select()
       ]);
       for (let index = 0; index < listPhanCongGiangDay.length; index++) {
@@ -289,16 +286,21 @@ app.get("/:type", async (req, res) => {
         const monHoc = _.filter(listSubjectGiangDay, {
           id: lopHoc[0].idmonhoc
         });
+        const kyHoc = _.filter(listKyHoc, {
+          id: listPhanCongGiangDay[0].idkyhoc
+        });
 
         listPhanCongGiangDay[index].chiTietGv = giangVien[0];
         listPhanCongGiangDay[index].chiTietLopHoc = lopHoc[0];
         listPhanCongGiangDay[index].chiTietMonHoc = monHoc[0];
+        listPhanCongGiangDay[index].chitetKyHoc = kyHoc[0];
       }
       res.render(template, {
         listTeacherGiangDay,
         listClassGiangDay,
         listSubjectGiangDay,
         listPhanCongGiangDay,
+        listKyHoc,
         numberOfSuject: listSubjectGiangDay.length
       });
       break;
@@ -361,11 +363,11 @@ app.get("/tkb/sinhtkb/:ky", async (req, res) => {
     listMonhocNew
   ] = await Promise.all([
     await knex("giangvien").select(),
-    await knex("lophocphan")
+    await knex("lophocphan").select(),
+    await knex("giangduong").select(),
+    await knex("phanconggiangday")
       .where({ idkyhoc: ky })
       .select(),
-    await knex("giangduong").select(),
-    await knex("phanconggiangday").select(),
     await knex("monhoc").select()
   ]);
 
@@ -509,7 +511,9 @@ app.get("/tkb/sinhtkb/:ky", async (req, res) => {
                 thu,
                 idgiangduong: giangduong.id
               });
-
+              if (soTietGVDayTrongNgay > 6) {
+                continue;
+              }
               const tietCuoiCungDay = soTietGVDayTrongNgay.length
                 ? soTietGVDayTrongNgay[soTietGVDayTrongNgay.length - 1].tiet
                 : 0; //tiết cuối cùng giảng viên dạy trong ngày
@@ -655,7 +659,6 @@ app.get("/tkb/giangvien", async (req, res) => {
       .select()
       .where("id", idtkb)
       .first();
-
     const tkbCuoi = JSON.parse(tkb.value);
     let danhsachDuocSapXep = _.sortBy(tkbCuoi, ["thu", "tiet"]);
     let tkbThemThongTin = [];
@@ -1268,7 +1271,7 @@ app.get("/edit/:type/:id", async (req, res) => {
     const listGiangDuong = await knex("giangduong").select();
     const listKyHoc = await knex("kyhoc").select();
     const listPhanCongGiangDay = await knex("phanconggiangday").select();
-    console.log(type);
+    //console.log(type);
     const template = `${type}/edit-${type}.html`;
 
     res.render(template, {
@@ -1350,9 +1353,12 @@ app.post("/edit/:type/:id", async (req, res, next) => {
         if (!idlop) {
           throw new Error("Vui lòng chọn lớp");
         }
+        if (!idkyhoc) {
+          throw new Error("Vui lòng chọn kỳ học");
+        }
         await knex(type)
           .where({ id })
-          .update({ idgiangvien, idlophocphan: idlop });
+          .update({ idgiangvien, idlophocphan: idlop, idkyhoc });
         return res.redirect("/phanconggiangday");
       case "lophocphan":
         if (!malophocphan) {
@@ -1364,12 +1370,9 @@ app.post("/edit/:type/:id", async (req, res, next) => {
         if (!sosinhvien) {
           throw new Error("Số sinh viên là bắt buộc");
         }
-        if (!idkyhoc) {
-          throw new Error("Kỳ học là bắt buộc");
-        }
         await knex(type)
           .where({ id })
-          .update({ malophocphan, idmonhoc, sosinhvien, idkyhoc });
+          .update({ malophocphan, idmonhoc, sosinhvien });
 
         return res.redirect("/lophocphan");
       case "giangduong":
@@ -1503,7 +1506,7 @@ app.post("/monhoc", async (req, res, next) => {
 
 app.post("/phanconggiangday", async (req, res, next) => {
   try {
-    const { monhoc, giangvien, lophocphan } = req.body;
+    const { monhoc, giangvien, lophocphan, kyhoc } = req.body;
 
     if (!monhoc) {
       throw new Error("Môn học là bắt buộc");
@@ -1514,10 +1517,13 @@ app.post("/phanconggiangday", async (req, res, next) => {
     if (!lophocphan) {
       throw new Error("Lớp là bắt buộc");
     }
-
+    if (!kyhoc) {
+      throw new Error("kỳ học là bắt buộc");
+    }
     const idRow = await knex("phanconggiangday").insert({
       idgiangvien: giangvien,
-      idlophocphan: lophocphan
+      idlophocphan: lophocphan,
+      idkyhoc: kyhoc
     });
     const infoPCMH = await knex("phanconggiangday")
       .select()
@@ -1587,9 +1593,6 @@ app.post("/lophocphan", async (req, res, next) => {
     if (!sosinhvien) {
       throw new Error("Số sinh viên là bắt buộc");
     }
-    if (!kyhoc) {
-      throw new Error("Môn học là bắt buộc");
-    }
     const listHocPhan = await knex("lophocphan")
       .select()
       .where("malophocphan", maLopHocPhan);
@@ -1603,8 +1606,7 @@ app.post("/lophocphan", async (req, res, next) => {
     const idRow = await knex("lophocphan").insert({
       maLopHocPhan,
       idmonhoc: monhoc,
-      sosinhvien,
-      idkyhoc: kyhoc
+      sosinhvien
     });
     const infoLopHP = await knex("lophocphan")
       .select()

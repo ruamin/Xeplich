@@ -8,11 +8,6 @@ exports.up = function(knex, Promise) {
       .unsigned()
       .references("id")
       .inTable("monhoc");
-    table
-      .integer("idkyhoc")
-      .unsigned()
-      .references("id")
-      .inTable("kyhoc");
     table.timestamp("created_at").defaultTo(knex.fn.now());
   });
 };

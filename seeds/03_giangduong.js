@@ -10,7 +10,7 @@ exports.seed = function(knex, Promise) {
         { id: 3, toanha: "H9", sochongoi: 110, tenphong: "9202" },
         { id: 4, toanha: "H9", sochongoi: 110, tenphong: "9203" },
         { id: 5, toanha: "H9", sochongoi: 110, tenphong: "9301" },
-        { id: 6, toanha: "H9", sochongoi: 110, tenphong: "9303" },
+        { id: 6, toanha: "H9", sochongoi: 70, tenphong: "9303" },
         { id: 7, toanha: "H9", sochongoi: 70, tenphong: "9501" },
         { id: 8, toanha: "H9", sochongoi: 70, tenphong: "9502" },
         { id: 9, toanha: "H9", sochongoi: 70, tenphong: "9503" },

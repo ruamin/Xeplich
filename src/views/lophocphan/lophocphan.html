@@ -30,15 +30,6 @@
         <label for="malophocphan">Lớp Học Phần</label>
       </div>
       <div class="input-field col m6 s12">
-        <select name="kyhoc">
-          <option value="" disabled selected>Chọn kỳ học</option>
-          {% for kyhoc in listKyHoc %}
-          <option value="{{kyhoc.id}}">{{kyhoc.name}}</option>
-          {% endfor %}
-        </select>
-        <label>Kỳ học</label>
-      </div>
-      <div class="input-field col m6 s12">
         <input id="sosinhvien" type="text" class="validate" name="sosinhvien" />
         <label for="sosinhvien">Số sinh viên</label>
       </div>
@@ -60,7 +51,6 @@
             <th>STT</th>
             <th>Lớp học phần</th>
             <th>Tên môn học</th>
-            <th>Kỳ học</th>
             <th>Số sinh viên</th>
             <th>Hành động</th>
           </tr>
@@ -71,7 +61,6 @@
             <td>{{ loop.index }}</td>
             <td>{{ hp.malophocphan }}</td>
             <td>{{ hp.monhoc.name }}- {{hp.monhoc.mamonhoc}}</td>
-            <td>{{ hp.kyhoc.name }}</td>
             <td>{{hp.sosinhvien}}</td>
             <td>
               <a

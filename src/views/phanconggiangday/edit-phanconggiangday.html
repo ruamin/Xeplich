@@ -32,6 +32,15 @@
           </select>
           <label>Lớp</label>
         </div>
+        <div class="input-field col m6 s12">
+          <select name="idkyhoc" id="select-kyhoc">
+            <option value="" disabled>Chọn kỳ học</option>
+            {% for kyhoc in listKyHoc %}
+            <option value="{{kyhoc.id}}" {% if dataEdit.idlop == kyhoc.id %} selected {% endif %}>{{kyhoc.name}}</option>
+            {% endfor %}
+          </select>
+          <label>Kỳ</label>
+        </div>
       </div>
       <button class="btn waves-effect waves-light center btn-submit light-blue " type="submit">Cập nhật thông tin Môn Học
         <i class="material-icons right">send</i>
