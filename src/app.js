@@ -62,7 +62,7 @@ function demNgayDayY(tkb, idgiangvien, thu) {
 }
 
 // Không giảng viên nào dạy 2 lớp trong cùng thời gian
-function giangBuocHC1(tkb, idgiangvien, idlophocphan, thu, tiet, idgiangduong) {
+function rangbuocHC1(tkb, idgiangvien, idlophocphan, thu, tiet, idgiangduong) {
   const result = _.filter(tkb, {
     idgiangvien,
     idlophocphan,
@@ -76,8 +76,9 @@ function giangBuocHC1(tkb, idgiangvien, idlophocphan, thu, tiet, idgiangduong) {
   }
   return true;
 }
+
 // Giảng viên phải dạy đúng lớp và đúng môn học được giao
-function giangBuocHC3(
+function rangbuocHC2(
   tkb,
   A,
   idgiangvien,
@@ -99,28 +100,29 @@ function giangBuocHC3(
     idgiangduong,
     cannotTeach: 0
   }); // dc day
-  if (lopPhanCong[0].canTeach * resultTkb[0].canTeach === 0) {
+  if (lopPhanCong[0].cannotTeach * resultTkb[0].canTeach === 0) {
     return true;
   }
   return false;
 }
-// Mỗi giảng viên dạy 1 môn nào đó phải đủ số lớp theo phân công
-function giangBuocHC4(tkb, monhoc, A, idgiangvien, idlophocphan) {
+// Mỗi giảng viên dạy phải đủ số lớp theo phân công
+function rangbuocHC3(tkb, monhoc, A, idgiangvien, idlophocphan) {
   const resultTkb = _.filter(tkb, { idgiangvien, idlophocphan });
   const filterLHP = _.filter(lophocphan, { id: idlophocphan })[0];
-  const resultA = _.filter(A, { idgiangvien, idlophocphan, canTeach: 0 });
-  if (resultTkb.length / filterLHP.sotinchi === resultA.length) {
+  const filterMon = _.filter(monhoc, { id: lophocphan.idmonhoc })[0];
+  const resultA = _.filter(A, { idgiangvien, idlophocphan, cannotTeach: 0 });
+  if (resultTkb.length / filterMon.sotinchi === resultA.length) {
     return true;
   }
-  console.log("Loi giang buoc 4");
+  console.log("Loi giang buoc 3");
   return false;
 }
 // Mỗi giảng viên phải dạy đủ số môn
-function giangBuocHC5(tkb, monhoc, A, idgiangvien, idmonhoc) {
+function rangbuocHC5(tkb, monhoc, A, idgiangvien, idmonhoc) {
   const resultAGvDuocDayMonHoc = _.filter(A, {
     idgiangvien,
     idmonhoc,
-    duocdaylop: 0
+    cannotTeach: 0
   });
   const resultTkbCuaGVDayMonHoc = _.filter(tkb, { idgiangvien, idmonhoc });
   const filterMonHoc = _.filter(monhoc, { id: idmonhoc })[0];
@@ -134,8 +136,23 @@ function giangBuocHC5(tkb, monhoc, A, idgiangvien, idmonhoc) {
   console.log("Loi giang buoc 5");
   return false;
 }
+//Moi giang duong chi chưa 1 lop trong 1 khoang thoi gian
+function rangbuocHC6(tkb, idlophocphan, idgiangduong, thu, tiet) {
+  const gdPhanCongDayLop = _.filter(tkb, {
+    idlophocphan,
+    idgiangduong,
+    thu,
+    tiet
+  });
+  if (gdPhanCongDayLop.length >= 2) {
+    console.log("Loi giang buoc 6");
+    return false;
+  }
+  return true;
+}
+
 // Các lớp học đúng thời gian được phân công
-function giangBuocHC6(
+function rangbuocHC7(
   tkb,
   A,
   idgiangvien,
@@ -168,7 +185,7 @@ function giangBuocHC6(
   }
   return false;
 }
-function giangBuocMem(tkb, lophocphan, A, idgiangvien, idlophocphan) {
+function rangbuocMem(tkb, lophocphan, A, idgiangvien, idlophocphan) {
   const resultTkbGvLHP = _.filter(tkb, { idgiangvien, idlophocphan });
   const filterMonGBM = _.filter(monhoc, { id: idmonhoc });
   const resultAGBM = _.filter(A, { idgiangvien, idmonhoc, duocdaylop: 0 });
@@ -178,7 +195,8 @@ function giangBuocMem(tkb, lophocphan, A, idgiangvien, idlophocphan) {
   console.log("Loi giang buoc mem");
   return false;
 }
-function kiemTra(arrayX, A, monhoc, listTkbOke = []) {
+function kiemTra(arrayX) {
+  const listTkbOke = [];
   for (let index = 0; index < arrayX.length; index++) {
     const tkb = arrayX[index];
     let KT = true;
@@ -192,13 +210,14 @@ function kiemTra(arrayX, A, monhoc, listTkbOke = []) {
         tiet
       } = tkb[indexTkb];
       if (
-        giangBuocHC1(tkb, idgiangvien, idmonhoc, thu, tiet) === false ||
-        giangBuocHC2(tkb, idlophocphan, thu, tiet) === false ||
-        giangBuocHC3(tkb, A, idgiangvien, idmonhoc, idlophocphan, thu, tiet) ===
+        rangbuocHC1(tkb, idgiangvien, idmonhoc, thu, tiet, idgiangduong) ===
           false ||
-        giangBuocHC4(tkb, monhoc, A, idgiangvien, idmonhoc) === false ||
-        giangBuocHC5(tkb, monhoc, A, idgiangvien, idmonhoc) === false ||
-        giangBuocHC6() === false
+        rangbuocHC2(tkb, idlophocphan, thu, tiet) === false
+        // rangbuocHC3(tkb, A, idgiangvien, idmonhoc, idlophocphan, thu, tiet) ===
+        //  false ||
+        // rangbuocHC4(tkb, monhoc, A, idgiangvien, idmonhoc) === false ||
+        // rangbuocHC5(tkb, monhoc, A, idgiangvien, idmonhoc) === false ||
+        // rangbuocHC6(tkb, idlophocphan, idgiangduong, thu, tiet) === false
       ) {
         KT = false;
         break;
@@ -303,6 +322,7 @@ app.get("/:type", async (req, res) => {
         listKyHoc,
         numberOfSuject: listSubjectGiangDay.length
       });
+
       break;
     }
     case "phanconggiangday2": {
@@ -442,8 +462,8 @@ app.get("/tkb/sinhtkb/:ky", async (req, res) => {
   // For mảng A phân công giảng dạy : 0 được dạy - 1 không được dạy ({ idgiangvien: 2, idmonhoc: 2, idlop: 2, duocdaylop: 0 })
   let dem = 0;
   listTeacherNew = _.shuffle(listTeacherNew);
-  //main process
-  var lastRoomAssigment = {};
+  // main process
+  // var lastRoomAssigment = {};
 
   listTeacherNew.map(giangvien => {
     const pcgdcuagiaovien = _.filter(A, {
@@ -474,17 +494,14 @@ app.get("/tkb/sinhtkb/:ky", async (req, res) => {
               continue; // xet vao giang duong khac
             }
 
-            lastRoomAssigment = lastRoomAssigment[giangduong.id] || {
-              thu: 2,
-              tiet: 1
-            };
+            //   lastRoomAssigment = lastRoomAssigment[giangduong.id] || {
+            //     thu: 2,
+            //     tiet: 1,
+            //   };
 
-            if (
-              lastRoomAssigment.thu === 6 &&
-              12 - lastRoomAssigment.tiet < monhoc.sotinchi
-            ) {
-              continue;
-            }
+            //   if (lastRoomAssigment.thu === 6 && 12 - lastRoomAssigment.tiet < monhoc.sotinchi) {
+            //     continue;
+            //   }
 
             for (const thu of danhSachThuHoc) {
               if (!kt) {
@@ -494,26 +511,25 @@ app.get("/tkb/sinhtkb/:ky", async (req, res) => {
               const soTietLopHocTrongNgay = _.filter(X, {
                 canTeach: 1,
                 idlophocphan: pcday.idlophocphan,
-                thu,
-                idgiangduong: giangduong.id
+                thu
               }); // tim het tat ca cac tiet lop hoc phan da xếp lịch
 
               const soTietGVDayTrongNgay = _.filter(X, {
                 canTeach: 1,
-                idlophocphan: pcday.idlophocphan,
                 thu,
                 idgiangvien: giangvien.id
               }); // tim hết tất cả các tiest giảng viên đã dạy
 
               const soTietGiangDuongTrongNgay = _.filter(X, {
                 canTeach: 1,
-                idlophocphan: pcday.idlophocphan,
                 thu,
                 idgiangduong: giangduong.id
               });
-              if (soTietGVDayTrongNgay > 6) {
+
+              if (soTietGVDayTrongNgay.length + monhoc.sotinchi > 6) {
                 continue;
               }
+
               const tietCuoiCungDay = soTietGVDayTrongNgay.length
                 ? soTietGVDayTrongNgay[soTietGVDayTrongNgay.length - 1].tiet
                 : 0; //tiết cuối cùng giảng viên dạy trong ngày
@@ -525,6 +541,7 @@ app.get("/tkb/sinhtkb/:ky", async (req, res) => {
                     soTietGiangDuongTrongNgay.length - 1
                   ].tiet
                 : 0;
+
               //tiết cuối cùng lớp học phần học trong ngày
               const soTietConLaiTrongBuoiCuaGV = 12 - tietCuoiCungDay; //số tiết giảng viên có thể dạy tiếp
               const soTietConLaiLopHocTrongBuoi = 12 - tietCuoiCungHoc; //số tiết lớp có thể học đc tiếp
@@ -586,8 +603,18 @@ app.get("/tkb/sinhtkb/:ky", async (req, res) => {
                           continue;
                         }
 
+                        if (
+                          tiet > 6 &&
+                          13 - tiet < monhoc.sotinchi - soTinChiDaXepLich
+                        ) {
+                          continue;
+                        }
+                        //chỉ dạy ssnags hoăc dạy chiều
+                        // if (tietCuoiCungDay <= 6 && tiet >= 7) {
+                        //   continue;
+                        // }
                         // xep lich
-                        const Xpsctd = _.filter(X, {
+                        const Xpsctd = _.find(X, {
                           canTeach: 0,
                           idlophocphan: lophocphan.id,
                           thu,
@@ -597,20 +624,17 @@ app.get("/tkb/sinhtkb/:ky", async (req, res) => {
                         }); // co phai la chua day khong?
 
                         // console.log({X})
-                        if (Xpsctd.length) {
-                          //neu chua day
-                          const tietDau = Xpsctd[0];
-
-                          const indexOfXpsctd = _.indexOf(X, tietDau);
+                        if (Xpsctd) {
+                          const indexOfXpsctd = _.indexOf(X, Xpsctd);
                           // console.log({indexOfXpsctd})
 
                           X[indexOfXpsctd] = {
-                            ...tietDau,
+                            ...Xpsctd,
                             canTeach: 1
                           };
                           dem += 1;
                           soTinChiDaXepLich += 1;
-                          lastRoomAssigment[giangduong.id] = { thu, tiet };
+                          // lastRoomAssigment[giangduong.id] = {thu, tiet};
                           console.log("add to X", dem);
                         }
                       }
@@ -627,16 +651,15 @@ app.get("/tkb/sinhtkb/:ky", async (req, res) => {
 
   const XCuoiCung = _.filter(X, { canTeach: 1 });
   console.log({ XCuoiCung });
-
+  const listTkbOke = kiemTra(XCuoiCung);
+  console.log({ listTkbOke });
   const listDone = await knex("xrandom").insert({
-    value: JSON.stringify(XCuoiCung)
+    value: JSON.stringify(listTkbOke)
   });
-
   console.log("================================================");
   console.log("Tkb Da themmmmmmmmm: =======: ", listDone);
   console.log("================================================");
   return res.redirect("/tkb/sinhtkb");
-  //return res.json({ ok: true });
 });
 app.get("/tkb/giangvien", async (req, res) => {
   try {
@@ -728,7 +751,7 @@ app.get("/tkb/giangvien", async (req, res) => {
   }
 });
 
-app.get("/tkb/giangbuoc", async (req, res) => {
+app.get("/tkb/rangbuoc", async (req, res) => {
   try {
     const [
       listTeacherNew,
@@ -748,17 +771,6 @@ app.get("/tkb/giangbuoc", async (req, res) => {
       const jsonX = JSON.parse(listRandomX[indexX].value);
       const jsonXAfterSort = _.sortBy(jsonX, ["thu", "tiet"]);
       let KT_NGOAI = true;
-
-      // for (let indexGv = 0; indexGv < listTeacherNew.length; indexGv++) {
-      //   let KT = true
-      //   const giangvienHienTai = listTeacherNew[indexGv]
-      //   const listTietHocGv = _.filter(jsonXAfterSort, { idgiangvien: giangvienHienTai.id })
-
-      //   if (!KT) {
-      //     break
-      //   }
-      // }
-
       if (KT_NGOAI) {
         listDung.push({ id: indexX });
       }
@@ -788,6 +800,7 @@ app.get("/tkb/giangbuoc", async (req, res) => {
     // Truncate x table
     await knex("xlaitao").truncate();
     let listPromise = [];
+    let listtkb = [];
     for (
       let indexListDung = 0;
       indexListDung < listDungSort.length;
@@ -801,8 +814,30 @@ app.get("/tkb/giangbuoc", async (req, res) => {
         })
       );
     }
-
     const listThemVaoX = await Promise.all(listPromise);
+
+    const isInsert = false; //them vao bang tkb
+
+    if (isInsert) {
+      const xlaitaoValues = await knex("xlaitao").select();
+      const xlaitaoValue = _.filter(xlaitaoValues, {
+        id: Number(listThemVaoX[0])
+      })[0].value;
+
+      const xlaitaoObj = JSON.parse(xlaitaoValue);
+
+      for (let index = 0; index < xlaitaoObj.length; index++) {
+        const element = xlaitaoObj[index];
+        await knex("thoikhoabieu").insert({
+          idlophocphan: element.idlophocphan,
+          idgiangvien: element.idgiangvien,
+          ky: 1,
+          idgiangduong: element.idgiangduong,
+          thu: element.thu,
+          tiet: element.tiet
+        });
+      }
+    }
 
     return res.json({ listThemVaoX });
   } catch (error) {
@@ -814,7 +849,7 @@ app.get("/tkb/giangbuoc", async (req, res) => {
   }
 });
 
-app.get("/tkb/giangbuoc/laitao", async (req, res) => {
+app.get("/tkb/rangbuoc/laitao", async (req, res) => {
   try {
     const [
       listTeacherNew,
@@ -962,7 +997,7 @@ app.get("/tkb/giangbuoc/laitao", async (req, res) => {
   }
 });
 
-const kiemTraGiangBuocLaiTao = async () => {
+const kiemTrarangbuocLaiTao = async () => {
   const [
     listTeacherNew,
     listClassNew,
@@ -1148,7 +1183,7 @@ app.get("/tkb/laitao", async (req, res) => {
       // console.log('========================================')
       // console.log('listSauLaiTaoThemThanhCong =', listSauLaiTaoThemThanhCong.length)
       // console.log('========================================')
-    } while ((await kiemTraGiangBuocLaiTao()) !== 1);
+    } while ((await kiemTrarangbuocLaiTao()) !== 1);
 
     // Lay phan tu tkb de lai tao
     const layPhanTuDeTaoDotBien = await knex("xlaitao")
@@ -1160,7 +1195,7 @@ app.get("/tkb/laitao", async (req, res) => {
     // console.log('================================================')
     await taoTkbDotBien(JSON.stringify(layPhanTuDeTaoDotBien.value));
 
-    await kiemTraGiangBuocLaiTao();
+    await kiemTrarangbuocLaiTao();
     return res.json({ success: true });
   } catch (error) {
     return res.json({
@@ -1242,6 +1277,9 @@ app.get("/tkb/khoa", async (req, res) => {
       vlz.tiet = tiet;
       resultList.push(vlz);
     });
+    resultList = _.sortBy(resultList, ["thongtinMonHoc.name"]);
+    console.log(resultList);
+
     return res.render("tkb/tkb-khoa.html", {
       resultList
     });
