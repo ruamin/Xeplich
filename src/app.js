@@ -228,7 +228,12 @@ function kiemTra(arrayX) {
 
   return listTkbOke;
 }
-
+function getsoTiet(sotinchi) {
+  if (sotinchi == 4) {
+    return 6;
+  }
+  return sotinchi + 1;
+}
 app.get("/:type", async (req, res) => {
   const { type } = req.params;
   const template = `${type}/${type}.html`;
@@ -314,6 +319,7 @@ app.get("/:type", async (req, res) => {
         listPhanCongGiangDay[index].chiTietMonHoc = monHoc[0];
         listPhanCongGiangDay[index].chitetKyHoc = kyHoc[0];
       }
+
       res.render(template, {
         listTeacherGiangDay,
         listClassGiangDay,
@@ -526,7 +532,7 @@ app.get("/tkb/sinhtkb/:ky", async (req, res) => {
                 idgiangduong: giangduong.id
               });
 
-              if (soTietGVDayTrongNgay.length + monhoc.sotinchi > 6) {
+              if (soTietGVDayTrongNgay.length + getsoTiet(monhoc.sotinchi) > 6) {
                 continue;
               }
 
@@ -549,15 +555,15 @@ app.get("/tkb/sinhtkb/:ky", async (req, res) => {
                 12 - tietCuoiCungGiangDuong; //số tiết lớp có thể học đc tiếp
 
               if (
-                12 - soTietLopHocTrongNgay.length >= monhoc.sotinchi &&
-                12 - soTietLopHocTrongNgay.length >= monhoc.sotinchi &&
-                12 - soTietGiangDuongTrongNgay.length >= monhoc.sotinchi &&
-                soTietConLaiTrongBuoiCuaGV > monhoc.sotinchi &&
-                soTietConLaiGiangDuongTrongBuoi > monhoc.sotinchi &&
-                soTietConLaiLopHocTrongBuoi >= monhoc.sotinchi
+                12 - soTietLopHocTrongNgay.length >= getsoTiet(monhoc.sotinchi) &&
+                12 - soTietLopHocTrongNgay.length >= getsoTiet(monhoc.sotinchi) &&
+                12 - soTietGiangDuongTrongNgay.length >= getsoTiet(monhoc.sotinchi) &&
+                soTietConLaiTrongBuoiCuaGV > getsoTiet(monhoc.sotinchi) &&
+                soTietConLaiGiangDuongTrongBuoi > getsoTiet(monhoc.sotinchi) &&
+                soTietConLaiLopHocTrongBuoi >= getsoTiet(monhoc.sotinchi)
               ) {
                 for (const tiet of danhTietHocTrongNgay) {
-                  if (soTinChiDaXepLich >= monhoc.sotinchi) {
+                  if (soTinChiDaXepLich >= getsoTiet(monhoc.sotinchi)) {
                     kt = false;
                     break; //da xếp lịch xong cho lớp học phần
                   }
@@ -598,14 +604,14 @@ app.get("/tkb/sinhtkb/:ky", async (req, res) => {
                       if (tietCoTheDay) {
                         if (
                           tiet <= 6 &&
-                          7 - tiet < monhoc.sotinchi - soTinChiDaXepLich
+                          7 - tiet < getsoTiet(monhoc.sotinchi) - soTinChiDaXepLich
                         ) {
                           continue;
                         }
 
                         if (
                           tiet > 6 &&
-                          13 - tiet < monhoc.sotinchi - soTinChiDaXepLich
+                          13 - tiet < getsoTiet(monhoc.sotinchi) - soTinChiDaXepLich
                         ) {
                           continue;
                         }
@@ -1278,7 +1284,7 @@ app.get("/tkb/khoa", async (req, res) => {
       resultList.push(vlz);
     });
     resultList = _.sortBy(resultList, ["thongtinMonHoc.name"]);
-    console.log(resultList);
+   // console.log(resultList);
 
     return res.render("tkb/tkb-khoa.html", {
       resultList
@@ -1564,44 +1570,6 @@ app.post("/phanconggiangday", async (req, res, next) => {
       idkyhoc: kyhoc
     });
     const infoPCMH = await knex("phanconggiangday")
-      .select()
-      .where("id", idRow[0])
-      .first();
-
-    res.json({
-      success: true,
-      message: "Thêm phân công giảng dạy thành công",
-      data: infoPCMH
-    });
-  } catch (error) {
-    res.json({
-      success: false,
-      message: error.message,
-      data: error
-    });
-  }
-});
-
-app.post("/phanconggiangday2", async (req, res, next) => {
-  try {
-    const { idMonHoc, giangvien, lop } = req.body;
-
-    if (!idMonHoc) {
-      throw new Error("Môn học là bắt buộc");
-    }
-    if (!giangvien) {
-      throw new Error("Giảng viên là bắt buộc");
-    }
-    if (!lop) {
-      throw new Error("Lớp là bắt buộc");
-    }
-
-    const idRow = await knex("phanconggiangday2").insert({
-      idmonhoc: idMonHoc,
-      idgiangvien: giangvien,
-      idlop: lop
-    });
-    const infoPCMH = await knex("phanconggiangday2")
       .select()
       .where("id", idRow[0])
       .first();
