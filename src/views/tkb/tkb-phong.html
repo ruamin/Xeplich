@@ -5,28 +5,24 @@
   <div class="col s12" id="info-tkb" data-idtkb="{{idtkb}}">
  
     <form action="" method="POST" class="col s12 card-panel form-input" >
-        <h5 class="form-title">Thông tin lịch dạy của giảng viên</h5> 
+        <h5 class="form-title">Thông tin giảng đường</h5> 
       <div class="row">
         <div class="input-field col m6 s12">
-          <select name="giangvien" id="select-gv-tkb">
+          <select name="giangduong" id="select-gd-tkb">
             <option value="">Giảng đường</option>
-            {% for teacher in listTeacherNew %}
-            <option value={{teacher.id}} {% if giangvien.id == teacher.id %}selected{% endif %}>{{teacher.name}}
+            {% for gd in listGiangDuong %}
+              <option value={{gd.id}} {% if gd.id == giangduong.id %}selected{% endif %}>{{gd.toanha}} - {{gd.tenphong}}
             </option>
             {% endfor %}
           </select>
-          <label>Giảng viên</label>
+          <label>Giảng duong</label>
         </div>
-        <!-- <div class ="input-field col m6 s12">
-          <button class="btn waves-effect waves-light center btn-submit light-blue " type="submit">TÌm kiếm
-            <i class="material-icons right">send</i>
-        </button> -->
       </div>
 
       </div>
     </form>
-    {% if giangvien %}
-    <h5 class="center-align">Lịch giảng dạy của giảng viên: <span class="light-blue-text">{{ giangvien.name }}</span>
+    {% if giangduong %}
+    <h5 class="center-align">Lịch giảng đường <span class="light-blue-text">{{ giangduong.toanha }}  - {{giangduong.tenphong}}</span>
     </h5>
     {% endif %}
   <div class="responsive-table" >
@@ -117,5 +113,5 @@
 {% endblock %}
 
 {% block script %}
-<script src="/js/tkb.js"></script>
+<script src="/js/tkb-phong.js"></script>
 {% endblock %}
